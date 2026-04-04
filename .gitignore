@@ -1,0 +1,16 @@
+node_modules/
+.DS_Store
+Thumbs.db
+*.log
+.env
+.env.*
+
+# ─── Arquivos sensíveis (sync do app — nunca vão pro GitHub) ───
+BRAND.md
+DESIGN.md
+LIA.md
+FLOWBUILDER.md
+CLAUDE.md
+data/plans.json
+scripts/sync.js
+scripts/build.js
