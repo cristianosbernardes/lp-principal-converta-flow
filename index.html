@@ -36,7 +36,6 @@
 
   <!-- ─── Favicon ─── -->
   <link rel="icon" type="image/svg+xml" href="/icon.svg">
-  <link rel="shortcut icon" href="/favicon.ico">
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 
   <!-- ─── Geist Font (CDN) ─── -->
@@ -183,7 +182,7 @@
         "name": "O ConvertaFlow tem período de teste gratuito?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Sim! Todos os planos possuem período de teste gratuito. O plano Essencial oferece 7 dias de teste, enquanto os planos Profissional, Business e Enterprise oferecem 14 dias gratuitos."
+          "text": "Sim! Todos os planos possuem 7 dias de teste gratuito. Basta cadastrar seu cartão para começar. Após o período de teste, a cobrança inicia automaticamente. Você pode cancelar a qualquer momento durante o trial sem ser cobrado."
         }
       },
       {
@@ -199,7 +198,7 @@
         "name": "Quais formas de pagamento são aceitas?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Aceitamos PIX, boleto bancário e cartão de cr��dito para clientes no Brasil, e cartão de crédito internacional. Os planos podem ser mensais, semestrais (15% de desconto) ou anuais (25% de desconto)."
+          "text": "Aceitamos PIX, boleto bancário e cartão de crédito para clientes no Brasil, e cartão de crédito internacional. Os planos podem ser mensais ou anuais (com 25% de desconto)."
         }
       },
       {
@@ -434,7 +433,8 @@
     .btn:active { transform: translateY(1px); }
 
     .btn-primary {
-      padding: 14px 32px;
+      height: 48px;
+      padding: 0 32px;
       background: linear-gradient(180deg, #1e7fd4 0%, #1a6bbf 100%);
       color: #ffffff;
       border-radius: var(--radius-md);
@@ -447,13 +447,13 @@
     }
 
     .btn-cta {
-      padding: 16px 36px;
+      height: 48px;
+      padding: 0 36px;
       background: var(--brand-cta);
       color: var(--text-primary);
       border-radius: var(--radius-md);
       box-shadow: var(--shadow-cta);
       font-weight: 700;
-      font-size: 16px;
     }
 
     .btn-cta:hover {
@@ -463,7 +463,8 @@
     }
 
     .btn-outline {
-      padding: 14px 32px;
+      height: 48px;
+      padding: 0 32px;
       background: transparent;
       color: var(--brand-primary);
       border: 1.5px solid var(--brand-primary);
@@ -475,7 +476,8 @@
     }
 
     .btn-outline-light {
-      padding: 14px 32px;
+      height: 48px;
+      padding: 0 32px;
       background: transparent;
       color: #ffffff;
       border: 1.5px solid rgba(171, 199, 255, 0.6);
@@ -488,13 +490,14 @@
     }
 
     .btn-sm {
-      padding: 10px 20px;
+      height: 36px;
+      padding: 0 20px;
       font-size: 13px;
     }
 
     .btn-lg {
-      padding: 18px 44px;
-      font-size: 17px;
+      height: 48px;
+      padding: 0 44px;
     }
 
     /* ══════════════════════════════════════════════════════════════════
@@ -1960,19 +1963,20 @@
   <nav class="navbar" role="navigation" aria-label="Navegação principal">
     <div class="navbar-inner">
       <a href="#" class="navbar-brand" aria-label="ConvertaFlow — Página inicial">
-        <!-- Brand Icon SVG (v3 — gradient) -->
-        <svg class="navbar-brand-icon" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <!-- Brand Icon (synced from app) -->
+        <svg class="navbar-brand-icon" width="36" height="36" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <g clip-path="url(#ci)">
+            <mask id="cm" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="0" y="0" width="512" height="512"><path d="M512 0H0v512h512V0Z" fill="white"/></mask>
+            <g mask="url(#cm)">
+              <path d="M389.12 0H122.88C55.015 0 0 55.015 0 122.88v266.24C0 456.985 55.015 512 122.88 512h266.24C456.985 512 512 456.985 512 389.12V122.88C512 55.015 456.985 0 389.12 0Z" fill="url(#cg)"/>
+              <path d="M245.694 308.926C216.282 325.906 178.673 315.829 161.692 286.417C144.711 257.005 154.789 219.397 184.201 202.416C205.921 189.876 228.797 188.777 247.849 202.64C255.025 205.489 276.221 212.607 305.477 195.767C333.611 179.475 338.762 158.548 340.104 150.199C337.294 126.52 351.79 105.657 373.751 92.979C403.163 75.999 440.771 86.076 457.751 115.488C474.732 144.899 464.656 182.508 435.244 199.489C415.023 211.163 389.571 214.618 370.969 203.224C363.067 200.213 346.789 194.21 318.614 210.429C289.401 227.345 284.968 244.839 283.847 252.478C283.834 256.597 283.834 254.717 283.834 258.883C284.968 266.301 289.401 282.689 318.614 299.605C346.789 315.824 363.067 309.821 370.969 306.81C389.571 295.416 415.023 299.977 435.244 311.65C464.656 328.631 474.732 366.24 457.751 395.652C440.771 425.064 403.163 435.141 373.751 418.16C351.79 405.482 337.294 383.514 340.104 359.835C338.762 351.486 333.611 330.559 305.477 314.267C276.221 297.427 255.025 304.545 247.849 307.394C246.26 308.75 247.679 307.78 245.694 308.926Z" fill="#FC9E1C"/>
+              <path d="M46.002 255.57C46.002 347.67 120.663 422.331 212.763 422.331C238.73 422.331 263.31 416.396 285.223 405.808C288.992 403.987 292.682 402.028 296.287 399.938C296.72 399.686 297.153 399.433 297.584 399.178C305.931 392.389 310.158 382.037 310.158 370.439C310.158 349.99 293.581 333.413 273.132 333.413C269.623 333.413 267.333 333.901 264.117 334.813C259.706 337.687 255.038 340.201 250.156 342.313C238.732 347.254 225.028 351.097 211.79 351.097C159.905 351.097 116.738 307.93 116.738 256.045C116.738 204.16 159.905 160.993 211.79 160.993C226.5 160.993 241.526 165.479 253.922 171.507C255.977 172.505 257.989 173.577 259.957 174.718C264.351 176.557 269.175 176.467 274.237 176.467C294.686 176.467 311.263 159.89 311.263 139.441C311.263 128.148 306.207 119.14 298.235 112.349C297.588 111.962 296.939 111.58 296.287 111.202C292.412 108.956 288.438 106.86 284.374 104.925C262.676 94.592 238.395 88.809 212.763 88.809C120.663 88.809 46.002 163.471 46.002 255.57Z" fill="white"/>
+            </g>
+          </g>
           <defs>
-            <linearGradient id="iconGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stop-color="#1E7FD4"/>
-              <stop offset="100%" stop-color="#1A3A6E"/>
-            </linearGradient>
+            <linearGradient id="cg" x1="0" y1="0" x2="512" y2="512" gradientUnits="userSpaceOnUse"><stop stop-color="#1E7FD4"/><stop offset="1" stop-color="#1A3A6E"/></linearGradient>
+            <clipPath id="ci"><rect width="512" height="512" fill="white"/></clipPath>
           </defs>
-          <rect width="100" height="100" rx="24" fill="url(#iconGrad)"/>
-          <path d="M62 28C48.745 28 38 38.745 38 52C38 65.255 48.745 76 62 76" stroke="#ffffff" stroke-width="8" stroke-linecap="round" fill="none"/>
-          <circle cx="62" cy="42" r="5" fill="#FC9E1C"/>
-          <circle cx="68" cy="55" r="4" fill="#FC9E1C"/>
-          <circle cx="58" cy="62" r="3.5" fill="#FC9E1C"/>
         </svg>
         <div class="navbar-brand-text">
           <span class="navbar-brand-name">ConvertaFlow</span>
@@ -1989,7 +1993,7 @@
       </div>
 
       <div class="navbar-actions">
-        <a href="#" class="navbar-login">Entrar</a>
+        <a href="https://app.convertaflow.com/" class="navbar-login">Entrar</a>
         <a href="#precos" class="btn btn-primary btn-sm">Começar grátis</a>
       </div>
 
@@ -2010,7 +2014,7 @@
     <a href="#automacao" onclick="closeMobileMenu()">Automação</a>
     <a href="#precos" onclick="closeMobileMenu()">Preços</a>
     <a href="#faq" onclick="closeMobileMenu()">FAQ</a>
-    <a href="#" onclick="closeMobileMenu()">Entrar</a>
+    <a href="https://app.convertaflow.com/" onclick="closeMobileMenu()">Entrar</a>
     <a href="#precos" class="btn btn-cta" onclick="closeMobileMenu()">Começar grátis</a>
   </div>
 
@@ -2020,11 +2024,6 @@
          ════════════════════════════════════════════════════════════════ -->
     <section class="hero" id="hero" aria-label="Apresentação principal">
       <div class="hero-inner">
-        <div class="hero-badge">
-          <span class="hero-badge-dot"></span>
-          Plataforma SaaS omnichannel brasileira
-        </div>
-
         <h1>
           Transforme conversas em <span class="highlight">conversões</span>
         </h1>
@@ -2035,8 +2034,8 @@
         </p>
 
         <div class="hero-actions">
-          <a href="#precos" class="btn btn-cta btn-lg">
-            Testar grátis por 14 dias
+          <a href="#precos" class="btn btn-cta">
+            Testar grátis por 7 dias
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
           </a>
           <a href="#recursos" class="btn btn-outline-light">
@@ -2386,7 +2385,7 @@
         <div class="reveal" style="text-align:center">
           <span class="label-tag label-tag--amber">Preços</span>
           <h2 class="section-title" id="precos-title">Planos para cada fase do seu negócio</h2>
-          <p class="section-subtitle">Do empreendedor solo à agência de grande porte. Todos os planos incluem Instagram Auto, Flow Builder e teste gratuito.</p>
+          <p class="section-subtitle">Do empreendedor solo à agência de grande porte. Todos os planos incluem Instagram Auto, Flow Builder e 7 dias grátis.</p>
         </div>
 
         <div class="pricing-toggle reveal">
@@ -2413,8 +2412,8 @@
             <div class="pricing-period">
               por mês <span class="pricing-original annual-only" style="display:none">R$ 49,90</span>
             </div>
-            <a href="#" class="btn btn-outline pricing-cta">Testar 7 dias grátis</a>
-            <div class="pricing-trial">Sem cartão de crédito</div>
+            <a href="#" class="btn btn-outline pricing-cta">Começar 7 dias grátis</a>
+            <div class="pricing-trial">Cancele quando quiser. Sem surpresas.</div>
             <div class="pricing-divider"></div>
             <div class="pricing-features-title">Incluso neste plano</div>
             <div class="pricing-features">
@@ -2441,8 +2440,8 @@
             <div class="pricing-period">
               por mês <span class="pricing-original annual-only" style="display:none">R$ 149,90</span>
             </div>
-            <a href="#" class="btn btn-primary pricing-cta">Testar 14 dias grátis</a>
-            <div class="pricing-trial">Sem cartão de crédito</div>
+            <a href="#" class="btn btn-primary pricing-cta">Começar 7 dias grátis</a>
+            <div class="pricing-trial">Cancele quando quiser. Sem surpresas.</div>
             <div class="pricing-divider"></div>
             <div class="pricing-features-title">Tudo do Essencial, mais</div>
             <div class="pricing-features">
@@ -2471,8 +2470,8 @@
             <div class="pricing-period">
               por mês <span class="pricing-original annual-only" style="display:none">R$ 299,90</span>
             </div>
-            <a href="#" class="btn btn-cta pricing-cta">Testar 14 dias grátis</a>
-            <div class="pricing-trial">Sem cartão de crédito</div>
+            <a href="#" class="btn btn-cta pricing-cta">Começar 7 dias grátis</a>
+            <div class="pricing-trial">Cancele quando quiser. Sem surpresas.</div>
             <div class="pricing-divider"></div>
             <div class="pricing-features-title">Tudo do Profissional, mais</div>
             <div class="pricing-features">
@@ -2501,8 +2500,8 @@
             <div class="pricing-period">
               por mês <span class="pricing-original annual-only" style="display:none">R$ 499,90</span>
             </div>
-            <a href="#" class="btn btn-primary pricing-cta">Testar 14 dias grátis</a>
-            <div class="pricing-trial">Sem cartão de crédito</div>
+            <a href="#" class="btn btn-primary pricing-cta">Começar 7 dias grátis</a>
+            <div class="pricing-trial">Cancele quando quiser. Sem surpresas.</div>
             <div class="pricing-divider"></div>
             <div class="pricing-features-title">Tudo do Business, mais</div>
             <div class="pricing-features">
@@ -2521,7 +2520,7 @@
         </div>
 
         <p style="text-align:center;margin-top:32px;font-size:14px;color:var(--text-muted);" class="reveal">
-          Todos os planos aceitam PIX, boleto e cartão de crédito. Planos semestrais com 15% de desconto.
+          Todos os planos aceitam PIX, boleto e cartão de crédito. Planos anuais com 25% de desconto.
         </p>
       </div>
     </section>
@@ -2584,7 +2583,7 @@
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
             </button>
             <div class="faq-answer">
-              <div class="faq-answer-inner">Sim! Todos os planos possuem período de teste gratuito. O plano Essencial oferece 7 dias, enquanto Profissional, Business e Enterprise oferecem 14 dias gratuitos. Não é necessário cartão de crédito.</div>
+              <div class="faq-answer-inner">Sim! Todos os planos possuem 7 dias de teste gratuito. Basta cadastrar seu cartão para começar. Se não gostar, cancele a qualquer momento durante o trial e não será cobrado. Após os 7 dias, a cobrança do plano escolhido inicia automaticamente.</div>
             </div>
           </div>
 
@@ -2604,7 +2603,7 @@
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
             </button>
             <div class="faq-answer">
-              <div class="faq-answer-inner">Aceitamos PIX, boleto bancário e cartão de crédito para clientes no Brasil, e cartão de crédito internacional. Os planos podem ser mensais, semestrais (15% off) ou anuais (25% off).</div>
+              <div class="faq-answer-inner">Aceitamos PIX, boleto bancário e cartão de crédito para clientes no Brasil, e cartão de crédito internacional. Os planos podem ser mensais ou anuais (com 25% de desconto).</div>
             </div>
           </div>
 
@@ -2627,9 +2626,9 @@
     <section class="section cta-final" aria-label="Chamada para ação">
       <div class="container cta-final-inner">
         <h2 class="reveal">Pronto para converter mais?</h2>
-        <p class="reveal reveal-delay-1">Comece grátis hoje. Sem cartão, sem compromisso. Cancele quando quiser.</p>
+        <p class="reveal reveal-delay-1">7 dias grátis para testar tudo. Cancele quando quiser, sem surpresas.</p>
         <div class="cta-final-actions reveal reveal-delay-2">
-          <a href="#precos" class="btn btn-cta btn-lg">
+          <a href="#precos" class="btn btn-cta">
             Começar teste grátis
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
           </a>

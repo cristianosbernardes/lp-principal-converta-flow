@@ -4,6 +4,8 @@ Thumbs.db
 *.log
 .env
 .env.*
+.claude/
+.playwright-mcp/
 
 # ─── Arquivos sensíveis (sync do app — nunca vão pro GitHub) ───
 BRAND.md
