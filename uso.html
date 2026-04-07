@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="pt-BR" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <!-- SEO -->
+  <title>Termos de Uso — ConvertaFlow</title>
+  <meta name="description" content="Termos de Uso da ConvertaFlow. Regras de utilizacao da plataforma, permissoes, conexoes, campanhas, IA, backup e suporte.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://convertaflow.com/uso.html">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="ConvertaFlow">
+  <meta property="og:title" content="Termos de Uso — ConvertaFlow">
+  <meta property="og:description" content="Termos de Uso da ConvertaFlow. Regras de utilizacao da plataforma, permissoes, conexoes, campanhas, IA, backup e suporte.">
+  <meta property="og:url" content="https://convertaflow.com/uso.html">
+  <meta property="og:locale" content="pt_BR">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="icon.svg">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+
+  <!-- Geist Font (CDN) -->
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/geist@1.3.0/dist/font/sans.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/geist@1.3.0/dist/font/mono.css">
+
+  <style>
+    /* Reset */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    /* CSS Variables */
+    :root {
+      --brand-primary: #1e7fd4;
+      --brand-dark: #1a6bbf;
+      --brand-deeper: #1a3a6e;
+      --brand-cta: #fc9e1c;
+      --brand-cta-light: #ffd166;
+      --brand-navy: #0d1b3e;
+      --brand-accent: #a8d4f5;
+      --surface-base: #faf8ff;
+      --surface-low: #f4f3fa;
+      --surface-container: #efedf4;
+      --surface-high: #e9e7ee;
+      --surface-card: #ffffff;
+      --text-primary: #02174a;
+      --text-secondary: #424751;
+      --text-muted: #727782;
+      --success: #16a34a;
+      --success-bg: #dcfce7;
+      --warning: #ca8a04;
+      --info: #1e7fd4;
+      --info-bg: #e8f0fd;
+      --shadow-sm: 0 2px 8px rgba(2, 23, 74, 0.06);
+      --shadow-md: 0 4px 20px -2px rgba(2, 23, 74, 0.04), 0 12px 40px -8px rgba(2, 23, 74, 0.08);
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 12px;
+      --radius-xl: 16px;
+      --radius-full: 9999px;
+      --transition-fast: 150ms ease;
+      --transition-base: 200ms ease;
+      --font-sans: 'Geist Sans', 'Geist', system-ui, -apple-system, sans-serif;
+      --font-mono: 'Geist Mono', 'SF Mono', 'Fira Code', monospace;
+    }
+
+    /* Base */
+    html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; font-size: 16px; }
+    body {
+      font-family: var(--font-sans);
+      color: var(--text-secondary);
+      background: var(--surface-base);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
+    }
+    img { max-width: 100%; height: auto; display: block; }
+    a { color: inherit; text-decoration: none; }
+
+    /* Typography */
+    h1, h2, h3, h4, h5, h6 {
+      color: var(--text-primary);
+      font-weight: 700;
+      line-height: 1.15;
+    }
+
+    /* Container */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* Simple Navbar */
+    .legal-navbar {
+      background: #ffffff;
+      border-bottom: 1px solid var(--surface-high);
+      padding: 16px 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .legal-navbar .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .legal-navbar-brand {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--text-primary);
+      letter-spacing: -0.02em;
+    }
+
+    .legal-navbar-back {
+      font-size: 14px;
+      color: var(--brand-primary);
+      font-weight: 500;
+      transition: color var(--transition-fast);
+    }
+
+    .legal-navbar-back:hover { color: var(--brand-dark); }
+
+    /* Legal Content */
+    .legal-content {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 48px 24px 80px;
+    }
+
+    .legal-content h1 {
+      font-size: 36px;
+      margin-bottom: 8px;
+      letter-spacing: -0.02em;
+    }
+
+    .legal-content .legal-update {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-bottom: 32px;
+      font-weight: 500;
+    }
+
+    .legal-content hr {
+      border: none;
+      border-top: 1px solid var(--surface-high);
+      margin: 32px 0;
+    }
+
+    .legal-content h2 {
+      font-size: 22px;
+      margin-top: 40px;
+      margin-bottom: 16px;
+      letter-spacing: -0.01em;
+    }
+
+    .legal-content h3 {
+      font-size: 17px;
+      margin-top: 28px;
+      margin-bottom: 12px;
+    }
+
+    .legal-content h4 {
+      font-size: 15px;
+      margin-top: 20px;
+      margin-bottom: 10px;
+    }
+
+    .legal-content p {
+      margin-bottom: 16px;
+      font-size: 15px;
+      line-height: 1.7;
+    }
+
+    .legal-content strong {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    .legal-content a {
+      color: var(--brand-primary);
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+
+    .legal-content a:hover { color: var(--brand-dark); }
+
+    .legal-content ul,
+    .legal-content ol {
+      margin-bottom: 16px;
+      padding-left: 24px;
+    }
+
+    .legal-content ul { list-style: disc; }
+    .legal-content ol { list-style: decimal; }
+
+    .legal-content li {
+      font-size: 15px;
+      line-height: 1.7;
+      margin-bottom: 6px;
+    }
+
+    .legal-content li ul,
+    .legal-content li ol {
+      margin-top: 6px;
+      margin-bottom: 0;
+    }
+
+    .legal-content blockquote {
+      border-left: 3px solid var(--brand-primary);
+      padding: 12px 20px;
+      margin: 16px 0;
+      background: var(--info-bg);
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      font-size: 15px;
+      color: var(--text-secondary);
+    }
+
+    /* Tables */
+    .table-wrapper {
+      overflow-x: auto;
+      margin: 16px 0 24px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--surface-high);
+    }
+
+    .legal-content table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+      min-width: 500px;
+    }
+
+    .legal-content table th {
+      background: var(--surface-low);
+      color: var(--text-primary);
+      font-weight: 600;
+      text-align: left;
+      padding: 12px 16px;
+      border-bottom: 2px solid var(--surface-high);
+      white-space: nowrap;
+    }
+
+    .legal-content table td {
+      padding: 10px 16px;
+      border-bottom: 1px solid var(--surface-container);
+      vertical-align: top;
+    }
+
+    .legal-content table tr:last-child td { border-bottom: none; }
+    .legal-content table tr:nth-child(even) { background: var(--surface-low); }
+    .legal-content table tr:hover { background: var(--info-bg); }
+
+    /* Footer */
+    .footer {
+      background: #0a0f1e;
+      padding: 64px 0 32px;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 48px;
+      margin-bottom: 48px;
+    }
+
+    .footer-brand-name {
+      font-size: 20px;
+      font-weight: 800;
+      color: #ffffff;
+      letter-spacing: -0.02em;
+      margin-bottom: 4px;
+    }
+
+    .footer-brand-sub {
+      font-size: 9px;
+      font-weight: 400;
+      color: rgba(255, 255, 255, 0.45);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 16px;
+    }
+
+    .footer-brand-desc {
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.5);
+      line-height: 1.6;
+      max-width: 320px;
+    }
+
+    .footer-col-title {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: rgba(255, 255, 255, 0.4);
+      margin-bottom: 20px;
+    }
+
+    .footer-col a {
+      display: block;
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.6);
+      padding: 6px 0;
+      transition: color var(--transition-fast);
+    }
+
+    .footer-col a:hover { color: #ffffff; }
+
+    .footer-bottom {
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      padding-top: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .footer-copyright {
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.35);
+    }
+
+    .footer-legal {
+      display: flex;
+      gap: 24px;
+    }
+
+    .footer-legal a {
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.35);
+      transition: color var(--transition-fast);
+    }
+
+    .footer-legal a:hover { color: rgba(255, 255, 255, 0.7); }
+
+    /* Responsive */
+    @media (max-width: 991px) {
+      .footer-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 32px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .legal-content h1 { font-size: 28px; }
+      .legal-content h2 { font-size: 19px; }
+      .legal-content { padding: 32px 16px 64px; }
+
+      .footer-grid {
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
+
+      .footer-bottom {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .footer-legal {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="legal-navbar">
+    <div class="container">
+      <a href="index.html" class="legal-navbar-brand">ConvertaFlow</a>
+      <a href="index.html" class="legal-navbar-back">&larr; Voltar ao site</a>
+    </div>
+  </nav>
+
+  <!-- Content -->
+  <main class="legal-content">
+    <h1>Termos de Uso</h1>
+    <p class="legal-update"><strong>Ultima atualizacao:</strong> 07 de abril de 2026</p>
+
+    <hr>
+
+    <h2>1. Sobre este Documento</h2>
+    <p>Estes Termos de Uso complementam os <strong>Termos de Servico</strong> e a <strong>Politica de Privacidade</strong> da ConvertaFlow, detalhando as regras especificas de utilizacao da Plataforma, responsabilidades do Usuario e de sua equipe, e as obrigacoes relacionadas ao tratamento de dados de terceiros.</p>
+    <p>A ConvertaFlow e operada por empresa inscrita no <strong>CNPJ 23.248.724/0001-54</strong>, com sede na Rua Wanderley Junior, 225 – Campinas – Sao Jose/SC – CEP 88101-010.</p>
+    <p>Ao acessar ou utilizar a Plataforma, voce confirma que leu, compreendeu e concorda com estes Termos.</p>
+
+    <hr>
+
+    <h2>2. Acesso a Plataforma</h2>
+
+    <h3>2.1. Requisitos de Acesso</h3>
+    <ul>
+      <li>A Plataforma e acessivel via navegador web em <strong>app.convertaflow.com</strong></li>
+      <li>Recomendamos as versoes mais recentes do Google Chrome, Mozilla Firefox, Microsoft Edge ou Safari</li>
+      <li>E necessaria uma conexao estavel com a internet</li>
+      <li>O acesso e exclusivo para <strong>maiores de 18 anos</strong></li>
+    </ul>
+
+    <h3>2.2. Credenciais e Autenticacao</h3>
+    <ul>
+      <li>O acesso e autenticado por meio de provedor de identidade seguro (Clerk)</li>
+      <li>Cada Usuario possui credenciais individuais e intransferiveis</li>
+      <li>E proibido compartilhar credenciais de acesso</li>
+      <li>Em caso de suspeita de comprometimento, altere sua senha imediatamente e contate contato@convertaflow.com</li>
+    </ul>
+
+    <h3>2.3. Cargos e Permissoes</h3>
+    <p>A Plataforma utiliza um sistema de permissoes baseado em cargos:</p>
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr><th>Cargo</th><th>Nivel de Acesso</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Proprietario</strong></td><td>Acesso total a Organizacao, incluindo cobranca e gestao de membros</td></tr>
+          <tr><td><strong>Gerente</strong></td><td>Acesso administrativo, exceto cobranca e exclusao da Organizacao</td></tr>
+          <tr><td><strong>Supervisor</strong></td><td>Gestao de equipes, filas e relatorios</td></tr>
+          <tr><td><strong>Atendente</strong></td><td>Atendimento ao cliente, envio de mensagens, gestao de contatos atribuidos</td></tr>
+          <tr><td><strong>Visualizador</strong></td><td>Acesso somente leitura para consulta e monitoramento</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <ul>
+      <li>O Proprietario e responsavel por atribuir cargos adequados a cada membro</li>
+      <li>Cada membro deve ter apenas as permissoes necessarias para suas funcoes</li>
+      <li>A ConvertaFlow nao se responsabiliza por acoes de membros com permissoes mal configuradas</li>
+    </ul>
+
+    <hr>
+
+    <h2>3. Gestao de Membros e Equipe</h2>
+
+    <h3>3.1. Convite de Membros</h3>
+    <ul>
+      <li>O Proprietario ou Gerente pode convidar novos membros por e-mail</li>
+      <li>O convite e enviado automaticamente com link de acesso</li>
+      <li>O convidado deve aceitar o convite e criar sua conta para acessar a Organizacao</li>
+      <li>O numero de membros e limitado pelo plano contratado</li>
+    </ul>
+
+    <h3>3.2. Responsabilidade sobre Membros</h3>
+    <ul>
+      <li>O Proprietario e responsavel pelas acoes de todos os membros de sua Organizacao</li>
+      <li>E obrigacao do Proprietario remover membros que deixem a empresa ou tenham seu acesso revogado</li>
+      <li>Acoes realizadas por membros sao atribuidas a Organizacao como um todo</li>
+    </ul>
+
+    <h3>3.3. Multiplas Organizacoes</h3>
+    <ul>
+      <li>Um Usuario pode pertencer a multiplas Organizacoes simultaneamente</li>
+      <li>Cada Organizacao possui dados completamente isolados</li>
+      <li>O Usuario pode alternar entre Organizacoes a qualquer momento</li>
+      <li>As permissoes sao independentes em cada Organizacao</li>
+    </ul>
+
+    <hr>
+
+    <h2>4. Uso das Conexoes de Comunicacao</h2>
+
+    <h3>4.1. WhatsApp</h3>
+
+    <h4>Conexao Nao Oficial (Direta)</h4>
+    <ul>
+      <li>Utiliza protocolo aberto para conexao direta com o WhatsApp</li>
+      <li>O Usuario assume os riscos de possiveis restricoes aplicadas pelo WhatsApp</li>
+      <li>A ConvertaFlow nao garante disponibilidade permanente desta modalidade</li>
+      <li>E responsabilidade do Usuario manter seu numero em conformidade com as politicas do WhatsApp</li>
+    </ul>
+
+    <h4>Conexao Oficial (Meta Cloud API)</h4>
+    <ul>
+      <li>Requer configuracao pelo Usuario no Meta Business Manager</li>
+      <li>Os custos de mensagens sao de responsabilidade do Usuario, cobrados diretamente pela Meta</li>
+      <li>A ConvertaFlow nao aplica custos adicionais sobre a API oficial</li>
+      <li>O Usuario deve cumprir integralmente a Politica de Mensagens Comerciais da Meta</li>
+    </ul>
+
+    <h3>4.2. Instagram e Facebook</h3>
+    <ul>
+      <li>Requerem conexao via conta comercial no Meta Business Suite</li>
+      <li>O Usuario deve cumprir as politicas de uso da Meta para cada plataforma</li>
+      <li>Funcionalidades podem ser afetadas por alteracoes nas APIs da Meta</li>
+    </ul>
+
+    <h3>4.3. Telegram</h3>
+    <ul>
+      <li>Requer criacao de bot via BotFather pelo Usuario</li>
+      <li>O Usuario deve cumprir os Termos de Servico do Telegram</li>
+    </ul>
+
+    <h3>4.4. E-mail</h3>
+    <ul>
+      <li>O envio de e-mails marketing deve cumprir a LGPD e a legislacao anti-spam</li>
+      <li>Todo e-mail marketing deve conter mecanismo de descadastro (unsubscribe)</li>
+      <li>O Usuario e responsavel pela qualidade e legalidade de sua lista de e-mails</li>
+      <li>Nos planos Essencial, Profissional e Business, os e-mails incluem rodape com a marca ConvertaFlow</li>
+    </ul>
+
+    <h3>4.5. Regras Gerais para Todas as Conexoes</h3>
+    <ul>
+      <li>Cada conexao deve ser utilizada exclusivamente pela Organizacao que a configurou</li>
+      <li>O numero de conexoes simultaneas e limitado pelo plano contratado</li>
+      <li>A ConvertaFlow pode desconectar conexoes que apresentem comportamento anomalo ou que violem estes Termos</li>
+      <li>O Usuario deve manter as credenciais de conexao atualizadas</li>
+    </ul>
+
+    <hr>
+
+    <h2>5. Uso de Campanhas e Envios em Massa</h2>
+
+    <h3>5.1. Regras Obrigatorias</h3>
+    <p>Para envio de campanhas, o Usuario <strong>deve obrigatoriamente</strong>:</p>
+    <ol>
+      <li>Possuir <strong>consentimento previo e comprovavel</strong> (opt-in) dos destinatarios</li>
+      <li>Fornecer mecanismo claro de <strong>descadastro</strong> (opt-out) em e-mails</li>
+      <li>Identificar-se como remetente de forma clara e verdadeira</li>
+      <li>Respeitar os <strong>limites de envio</strong> do plano contratado</li>
+      <li>Nao enviar mensagens em <strong>horarios improprios</strong> (recomendado: 8h as 20h, horario local do destinatario)</li>
+      <li>Manter sua lista de contatos <strong>atualizada</strong> e livre de numeros/e-mails invalidos</li>
+    </ol>
+
+    <h3>5.2. Conteudo Proibido em Campanhas</h3>
+    <p>E proibido enviar campanhas contendo:</p>
+    <ul>
+      <li>Conteudo que incite violencia, discriminacao ou odio</li>
+      <li>Ofertas de produtos ou servicos ilegais</li>
+      <li>Informacoes falsas ou enganosas</li>
+      <li>Conteudo de natureza sexual explicita</li>
+      <li>Phishing, malware ou links maliciosos</li>
+      <li>Esquemas financeiros fraudulentos (piramides, apostas ilegais)</li>
+      <li>Conteudo que viole direitos autorais de terceiros</li>
+    </ul>
+
+    <h3>5.3. Ferramentas de Protecao</h3>
+    <p>A Plataforma oferece ferramentas de protecao contra bloqueios em envios de WhatsApp. Essas ferramentas:</p>
+    <ul>
+      <li>Sao configuradas pelo Usuario conforme sua necessidade</li>
+      <li>Visam proteger a integridade do numero do Usuario</li>
+      <li><strong>Nao garantem</strong> a ausencia de bloqueios ou restricoes por parte do WhatsApp</li>
+      <li>Devem ser utilizadas em conjunto com boas praticas de envio</li>
+    </ul>
+
+    <h3>5.4. Monitoramento</h3>
+    <p>A ConvertaFlow reserva-se o direito de:</p>
+    <ul>
+      <li>Monitorar padroes de envio para detectar abusos</li>
+      <li>Suspender campanhas que apresentem taxa anormalmente alta de reclamacoes</li>
+      <li>Bloquear contas que utilizem a Plataforma para spam</li>
+      <li>Cooperar com autoridades em investigacoes sobre mensagens abusivas</li>
+    </ul>
+
+    <hr>
+
+    <h2>6. Uso da Inteligencia Artificial</h2>
+
+    <h3>6.1. Funcionalidades Disponiveis</h3>
+    <p>A Plataforma oferece funcionalidades de IA configuraveis pelo Usuario, incluindo:</p>
+    <ul>
+      <li><strong>Agentes de IA:</strong> chatbots configuraveis para atendimento automatizado</li>
+      <li><strong>Classificacao de intencao:</strong> categorizacao automatica de mensagens</li>
+      <li><strong>Transcricao de audio:</strong> conversao automatica de audios em texto</li>
+      <li><strong>Memoria semantica:</strong> busca contextual baseada em significado</li>
+      <li><strong>Base de conhecimento:</strong> respostas baseadas em documentos enviados pelo Usuario</li>
+      <li><strong>Geracao de fluxos:</strong> sugestoes de automacao baseadas em padroes</li>
+    </ul>
+
+    <h3>6.2. Controle e Configuracao</h3>
+    <ul>
+      <li>Todas as funcionalidades de IA possuem <strong>controle de ativacao individual</strong> (liga/desliga)</li>
+      <li>Quando desativadas, nenhum dado e processado por provedores de IA</li>
+      <li>O Usuario pode escolher o provedor de IA e o modelo a utilizar</li>
+      <li>O Usuario pode fornecer suas proprias chaves de API (BYOK)</li>
+      <li>O consumo de tokens de IA e limitado conforme o plano contratado</li>
+    </ul>
+
+    <h3>6.3. Limitacoes e Responsabilidades</h3>
+    <ul>
+      <li>A IA e uma <strong>ferramenta auxiliar</strong> e pode gerar respostas imprecisas ou inadequadas</li>
+      <li>O Usuario deve <strong>supervisionar</strong> as respostas geradas por IA antes do envio quando possivel</li>
+      <li>O Usuario e <strong>responsavel</strong> pelo conteudo enviado por agentes de IA em nome de sua Organizacao</li>
+      <li>A ConvertaFlow <strong>nao garante</strong> a precisao, completude ou adequacao das respostas geradas por IA</li>
+      <li>Recomendamos fortemente a <strong>revisao humana</strong> em contextos sensiveis (reclamacoes, questoes juridicas, atendimento de saude)</li>
+    </ul>
+
+    <h3>6.4. Dados e IA</h3>
+    <ul>
+      <li>Os dados processados por IA sao enviados exclusivamente para a funcionalidade solicitada</li>
+      <li>Provedores de IA nao retem dados alem do necessario para processar a solicitacao</li>
+      <li>Embeddings semanticos sao armazenados no banco de dados da Organizacao (isolado)</li>
+      <li>O Usuario pode solicitar a exclusao de todos os dados de IA a qualquer momento</li>
+    </ul>
+
+    <hr>
+
+    <h2>7. Backup e Armazenamento de Dados</h2>
+
+    <h3>7.1. Backups Automaticos</h3>
+    <ul>
+      <li>Disponiveis nos planos Profissional (60 dias), Business (90 dias) e Enterprise (90 dias)</li>
+      <li>Executados automaticamente a cada hora (quando habilitados)</li>
+      <li>Incluem mensagens, contatos e metadados</li>
+      <li>Midias incluidas apenas nos planos Business e Enterprise</li>
+      <li>Armazenados em infraestrutura segura com criptografia</li>
+    </ul>
+
+    <h3>7.2. Restauracao</h3>
+    <ul>
+      <li>O Usuario pode restaurar backups diretamente pela Plataforma</li>
+      <li>A restauracao pode ser feita em qualquer conexao da Organizacao</li>
+      <li>Restauracoes sao mescladas com dados existentes (nao substituem)</li>
+      <li>Backups expirados nao podem ser recuperados</li>
+    </ul>
+
+    <h3>7.3. Retencao de Dados</h3>
+    <ul>
+      <li><strong>Mensagens sem backup:</strong> retencao minima de 30 dias</li>
+      <li><strong>Mensagens com backup:</strong> conforme periodo do plano (60 ou 90 dias)</li>
+      <li><strong>Contatos e CRM:</strong> mantidos enquanto a conta estiver ativa</li>
+      <li><strong>Dados da Organizacao:</strong> mantidos por 90 dias apos cancelamento</li>
+      <li><strong>Dados de cobranca:</strong> mantidos por 5 anos (obrigacao fiscal)</li>
+    </ul>
+
+    <h3>7.4. Exportacao de Dados</h3>
+    <p>O Usuario pode exportar seus dados a qualquer momento:</p>
+    <ul>
+      <li><strong>Contatos:</strong> exportacao em formato CSV</li>
+      <li><strong>Conversas:</strong> exportacao do historico disponivel</li>
+      <li><strong>Dados da conta:</strong> mediante solicitacao ao suporte</li>
+    </ul>
+
+    <hr>
+
+    <h2>8. Obrigacoes do Usuario como Controlador de Dados</h2>
+
+    <h3>8.1. Responsabilidade LGPD</h3>
+    <p>Como <strong>Controlador</strong> dos dados dos Contatos Finais, o Usuario e obrigado a:</p>
+    <ol>
+      <li><strong>Obter base legal</strong> valida para o tratamento de dados (consentimento, legitimo interesse, execucao de contrato, etc.)</li>
+      <li><strong>Informar</strong> os Contatos Finais sobre como seus dados sao tratados</li>
+      <li><strong>Atender</strong> solicitacoes de titulares (acesso, correcao, exclusao, portabilidade)</li>
+      <li><strong>Manter registros</strong> das operacoes de tratamento realizadas</li>
+      <li><strong>Nomear</strong> um Encarregado de Dados (DPO) quando exigido por lei</li>
+      <li><strong>Reportar</strong> incidentes de seguranca a ANPD e aos titulares afetados quando aplicavel</li>
+    </ol>
+
+    <h3>8.2. O que a ConvertaFlow Faz como Operadora</h3>
+    <ul>
+      <li>Processa dados exclusivamente conforme instrucoes do Usuario (Controlador)</li>
+      <li>Mantem medidas tecnicas e organizacionais de seguranca</li>
+      <li>Auxilia o Usuario no atendimento a solicitacoes de titulares</li>
+      <li>Notifica o Usuario em caso de incidente de seguranca</li>
+      <li>Exclui dados ao termino do contrato, conforme prazos estabelecidos</li>
+      <li>Nao utiliza dados de Contatos Finais para finalidades proprias</li>
+    </ul>
+
+    <h3>8.3. Consentimento dos Contatos Finais</h3>
+    <p>E responsabilidade <strong>exclusiva do Usuario</strong>:</p>
+    <ul>
+      <li>Coletar e documentar o consentimento dos Contatos Finais quando necessario</li>
+      <li>Manter registros de opt-in para campanhas de marketing</li>
+      <li>Disponibilizar mecanismo de opt-out e atender solicitacoes de descadastro</li>
+      <li>Informar os Contatos Finais sobre o uso de IA no atendimento, quando aplicavel</li>
+    </ul>
+
+    <hr>
+
+    <h2>9. Condutas Proibidas</h2>
+
+    <h3>9.1. Proibicoes Tecnicas</h3>
+    <ul>
+      <li><strong>Engenharia reversa:</strong> descompilar, desmontar ou tentar extrair o codigo-fonte da Plataforma</li>
+      <li><strong>Scraping:</strong> utilizar bots, crawlers ou ferramentas automatizadas para extrair dados da Plataforma</li>
+      <li><strong>Exploracao de vulnerabilidades:</strong> tentar acessar sistemas, dados ou funcionalidades sem autorizacao</li>
+      <li><strong>Interferencia:</strong> realizar acoes que possam comprometer o desempenho, a seguranca ou a disponibilidade da Plataforma</li>
+      <li><strong>Bypass de limites:</strong> tentar burlar os limites do plano contratado por meios tecnicos</li>
+    </ul>
+
+    <h3>9.2. Proibicoes de Conteudo</h3>
+    <ul>
+      <li>Conteudo ilegal, difamatorio, obsceno, discriminatorio ou que incite violencia</li>
+      <li>Spam, mensagens nao solicitadas ou comunicacoes abusivas</li>
+      <li>Material que viole direitos autorais, marcas registradas ou propriedade intelectual de terceiros</li>
+      <li>Informacoes falsas, enganosas ou fraudulentas</li>
+      <li>Conteudo que exponha dados pessoais de terceiros sem autorizacao</li>
+    </ul>
+
+    <h3>9.3. Proibicoes Comerciais</h3>
+    <ul>
+      <li>Revenda ou sublicenciamento do acesso a Plataforma sem autorizacao</li>
+      <li>Uso da Plataforma para beneficio de terceiros fora da Organizacao assinante</li>
+      <li>Representacao falsa de vinculo com a ConvertaFlow</li>
+      <li>Uso da marca ConvertaFlow sem autorizacao previa por escrito</li>
+    </ul>
+
+    <hr>
+
+    <h2>10. Suporte e Central de Ajuda</h2>
+
+    <h3>10.1. Canais de Suporte</h3>
+    <ul>
+      <li><strong>Central de Ajuda:</strong> documentacao completa disponivel dentro da Plataforma</li>
+      <li><strong>Chat de suporte:</strong> disponivel na Plataforma durante horario comercial</li>
+      <li><strong>E-mail:</strong> contato@convertaflow.com</li>
+      <li><strong>IA de suporte (Lia):</strong> assistente virtual para duvidas frequentes, disponivel 24/7</li>
+    </ul>
+
+    <h3>10.2. Escopo do Suporte</h3>
+    <p>O suporte da ConvertaFlow abrange:</p>
+    <ul>
+      <li>Duvidas sobre funcionalidades da Plataforma</li>
+      <li>Problemas tecnicos de acesso e uso</li>
+      <li>Orientacoes sobre configuracao e integracoes</li>
+      <li>Incidentes de seguranca e privacidade</li>
+    </ul>
+    <p>O suporte <strong>nao abrange</strong>:</p>
+    <ul>
+      <li>Consultoria de marketing ou estrategia de negocios</li>
+      <li>Configuracao de contas em plataformas de terceiros (Meta, Google, etc.)</li>
+      <li>Desenvolvimento de integracoes customizadas</li>
+      <li>Suporte juridico sobre LGPD ou legislacao</li>
+    </ul>
+
+    <h3>10.3. Prioridade por Plano</h3>
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr><th>Plano</th><th>Tempo de Resposta</th><th>Canais</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Essencial</td><td>Ate 48 horas uteis</td><td>E-mail, Central de Ajuda, IA</td></tr>
+          <tr><td>Profissional</td><td>Ate 24 horas uteis</td><td>E-mail, Chat, Central de Ajuda, IA</td></tr>
+          <tr><td>Business</td><td>Ate 12 horas uteis</td><td>E-mail, Chat prioritario, Central de Ajuda, IA</td></tr>
+          <tr><td>Enterprise</td><td>Ate 4 horas uteis</td><td>E-mail, Chat prioritario, Suporte dedicado, IA</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <hr>
+
+    <h2>11. Disponibilidade e Manutencao</h2>
+
+    <h3>11.1. Compromisso de Disponibilidade</h3>
+    <ul>
+      <li>A ConvertaFlow se compromete a manter a Plataforma disponivel com uptime de <strong>99%</strong> ao mes</li>
+      <li>Este indice nao inclui manutencoes programadas comunicadas com antecedencia</li>
+      <li>O calculo de disponibilidade considera apenas a infraestrutura sob controle da ConvertaFlow</li>
+    </ul>
+
+    <h3>11.2. Manutencoes Programadas</h3>
+    <ul>
+      <li>Manutencoes programadas serao comunicadas com no minimo <strong>48 horas de antecedencia</strong></li>
+      <li>Preferencialmente realizadas em horarios de menor uso (madrugada, horario de Brasilia)</li>
+      <li>A comunicacao sera feita por e-mail e/ou notificacao na Plataforma</li>
+    </ul>
+
+    <h3>11.3. Indisponibilidades Nao Programadas</h3>
+    <ul>
+      <li>Incidentes serao comunicados assim que identificados</li>
+      <li>Atualizacoes de status serao fornecidas a cada 2 horas durante o incidente</li>
+      <li>Relatorio pos-incidente disponivel mediante solicitacao (planos Business e Enterprise)</li>
+    </ul>
+
+    <hr>
+
+    <h2>12. Alteracoes nos Termos de Uso</h2>
+    <ul>
+      <li>A ConvertaFlow pode atualizar estes Termos a qualquer momento</li>
+      <li>Alteracoes significativas serao comunicadas com <strong>30 dias de antecedencia</strong></li>
+      <li>A comunicacao sera feita por e-mail e/ou notificacao na Plataforma</li>
+      <li>O uso continuado apos o periodo de notificacao constitui aceitacao</li>
+      <li>Versoes anteriores ficam disponiveis para consulta mediante solicitacao</li>
+    </ul>
+
+    <hr>
+
+    <h2>13. Disposicoes Finais</h2>
+
+    <h3>13.1. Integralidade</h3>
+    <p>Estes Termos de Uso, em conjunto com os <strong>Termos de Servico</strong> e a <strong>Politica de Privacidade</strong>, constituem o acordo completo entre o Usuario e a ConvertaFlow.</p>
+
+    <h3>13.2. Prevalencia</h3>
+    <p>Em caso de conflito entre estes documentos:</p>
+    <ol>
+      <li><strong>Termos de Servico</strong> (prevalecem sobre os demais)</li>
+      <li><strong>Politica de Privacidade</strong> (prevalece sobre Termos de Uso em materia de dados)</li>
+      <li><strong>Termos de Uso</strong> (complementa os anteriores)</li>
+    </ol>
+
+    <h3>13.3. Nulidade Parcial</h3>
+    <p>Se qualquer disposicao destes Termos for considerada invalida ou inexequivel, as demais disposicoes permanecerao em pleno vigor.</p>
+
+    <h3>13.4. Legislacao Aplicavel</h3>
+    <p>Estes Termos sao regidos pela legislacao da <strong>Republica Federativa do Brasil</strong>, em especial a LGPD, o CDC e o Marco Civil da Internet.</p>
+
+    <h3>13.5. Foro</h3>
+    <p>Fica eleito o foro da <strong>Comarca de Sao Jose, Estado de Santa Catarina</strong>, para dirimir quaisquer controversias.</p>
+
+    <hr>
+
+    <h2>14. Contato</h2>
+    <ul>
+      <li><strong>E-mail geral:</strong> contato@convertaflow.com</li>
+      <li><strong>Privacidade e dados:</strong> privacidade@convertaflow.com</li>
+      <li><strong>Endereco:</strong> Rua Wanderley Junior, 225 – Campinas – Sao Jose/SC – CEP 88101-010</li>
+    </ul>
+
+    <hr>
+
+    <p><em>ConvertaFlow — CNPJ 23.248.724/0001-54</em><br>
+    <em>Documento vigente a partir de 07 de abril de 2026.</em></p>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer" role="contentinfo">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <div class="footer-brand-name">ConvertaFlow</div>
+          <div class="footer-brand-sub">Omnichannel + IA</div>
+          <p class="footer-brand-desc">A plataforma que transforma conversas em conversoes. Centralize WhatsApp, Instagram e Facebook com IA integrada.</p>
+        </div>
+
+        <div class="footer-col">
+          <div class="footer-col-title">Produto</div>
+          <a href="index.html#recursos">Recursos</a>
+          <a href="index.html#precos">Precos</a>
+          <a href="index.html#ia">Lia IA</a>
+          <a href="index.html#automacao">Automacao</a>
+          <a href="index.html#canais">Canais</a>
+        </div>
+
+        <div class="footer-col">
+          <div class="footer-col-title">Recursos</div>
+          <a href="index.html#faq">FAQ</a>
+          <a href="#">Central de Ajuda</a>
+          <a href="#">Blog</a>
+          <a href="#">Changelog</a>
+          <a href="#">Status</a>
+        </div>
+
+        <div class="footer-col">
+          <div class="footer-col-title">Empresa</div>
+          <a href="#">Sobre</a>
+          <a href="#">Contato</a>
+          <a href="#">Parceiros</a>
+          <a href="#">Carreiras</a>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div class="footer-copyright">
+          &copy; 2024–2026 ConvertaFlow. Todos os direitos reservados.
+        </div>
+        <div class="footer-legal">
+          <a href="uso.html">Termos de Uso</a>
+          <a href="privacidade.html">Politica de Privacidade</a>
+          <a href="termos.html">Termos de Servico</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

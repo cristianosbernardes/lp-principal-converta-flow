@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="pt-BR" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <!-- SEO -->
+  <title>Política de Privacidade — ConvertaFlow</title>
+  <meta name="description" content="Política de Privacidade da ConvertaFlow. Saiba como coletamos, usamos, armazenamos e protegemos seus dados pessoais em conformidade com a LGPD.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://convertaflow.com/privacidade.html">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="ConvertaFlow">
+  <meta property="og:title" content="Política de Privacidade — ConvertaFlow">
+  <meta property="og:description" content="Política de Privacidade da ConvertaFlow. Saiba como coletamos, usamos, armazenamos e protegemos seus dados pessoais.">
+  <meta property="og:url" content="https://convertaflow.com/privacidade.html">
+  <meta property="og:locale" content="pt_BR">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="icon.svg">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+
+  <!-- Geist Font (CDN) -->
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/geist@1.3.0/dist/font/sans.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/geist@1.3.0/dist/font/mono.css">
+
+  <style>
+    /* Reset */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    /* CSS Variables */
+    :root {
+      --brand-primary: #1e7fd4;
+      --brand-dark: #1a6bbf;
+      --brand-deeper: #1a3a6e;
+      --brand-cta: #fc9e1c;
+      --brand-cta-light: #ffd166;
+      --brand-navy: #0d1b3e;
+      --brand-accent: #a8d4f5;
+      --surface-base: #faf8ff;
+      --surface-low: #f4f3fa;
+      --surface-container: #efedf4;
+      --surface-high: #e9e7ee;
+      --surface-card: #ffffff;
+      --text-primary: #02174a;
+      --text-secondary: #424751;
+      --text-muted: #727782;
+      --success: #16a34a;
+      --success-bg: #dcfce7;
+      --warning: #ca8a04;
+      --info: #1e7fd4;
+      --info-bg: #e8f0fd;
+      --shadow-sm: 0 2px 8px rgba(2, 23, 74, 0.06);
+      --shadow-md: 0 4px 20px -2px rgba(2, 23, 74, 0.04), 0 12px 40px -8px rgba(2, 23, 74, 0.08);
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 12px;
+      --radius-xl: 16px;
+      --radius-full: 9999px;
+      --transition-fast: 150ms ease;
+      --transition-base: 200ms ease;
+      --font-sans: 'Geist Sans', 'Geist', system-ui, -apple-system, sans-serif;
+      --font-mono: 'Geist Mono', 'SF Mono', 'Fira Code', monospace;
+    }
+
+    /* Base */
+    html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; font-size: 16px; }
+    body {
+      font-family: var(--font-sans);
+      color: var(--text-secondary);
+      background: var(--surface-base);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
+    }
+    img { max-width: 100%; height: auto; display: block; }
+    a { color: inherit; text-decoration: none; }
+
+    /* Typography */
+    h1, h2, h3, h4, h5, h6 {
+      color: var(--text-primary);
+      font-weight: 700;
+      line-height: 1.15;
+    }
+
+    /* Container */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* ─── Simple Navbar ─── */
+    .legal-navbar {
+      background: #ffffff;
+      border-bottom: 1px solid var(--surface-high);
+      padding: 16px 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .legal-navbar .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .legal-navbar-brand {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--text-primary);
+      letter-spacing: -0.02em;
+    }
+
+    .legal-navbar-back {
+      font-size: 14px;
+      color: var(--brand-primary);
+      font-weight: 500;
+      transition: color var(--transition-fast);
+    }
+
+    .legal-navbar-back:hover {
+      color: var(--brand-dark);
+    }
+
+    /* ─── Legal Content ─── */
+    .legal-content {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 48px 24px 80px;
+    }
+
+    .legal-content h1 {
+      font-size: 36px;
+      margin-bottom: 8px;
+      letter-spacing: -0.02em;
+    }
+
+    .legal-content .legal-update {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-bottom: 32px;
+      font-weight: 500;
+    }
+
+    .legal-content hr {
+      border: none;
+      border-top: 1px solid var(--surface-high);
+      margin: 32px 0;
+    }
+
+    .legal-content h2 {
+      font-size: 22px;
+      margin-top: 40px;
+      margin-bottom: 16px;
+      letter-spacing: -0.01em;
+    }
+
+    .legal-content h3 {
+      font-size: 17px;
+      margin-top: 28px;
+      margin-bottom: 12px;
+    }
+
+    .legal-content p {
+      margin-bottom: 16px;
+      font-size: 15px;
+      line-height: 1.7;
+    }
+
+    .legal-content strong {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    .legal-content a {
+      color: var(--brand-primary);
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+
+    .legal-content a:hover {
+      color: var(--brand-dark);
+    }
+
+    .legal-content ul,
+    .legal-content ol {
+      margin-bottom: 16px;
+      padding-left: 24px;
+    }
+
+    .legal-content ul { list-style: disc; }
+    .legal-content ol { list-style: decimal; }
+
+    .legal-content li {
+      font-size: 15px;
+      line-height: 1.7;
+      margin-bottom: 6px;
+    }
+
+    .legal-content li ul,
+    .legal-content li ol {
+      margin-top: 6px;
+      margin-bottom: 0;
+    }
+
+    .legal-content blockquote {
+      border-left: 3px solid var(--brand-primary);
+      padding: 12px 20px;
+      margin: 16px 0;
+      background: var(--info-bg);
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      font-size: 15px;
+      color: var(--text-secondary);
+    }
+
+    /* Tables */
+    .table-wrapper {
+      overflow-x: auto;
+      margin: 16px 0 24px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--surface-high);
+    }
+
+    .legal-content table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+      min-width: 500px;
+    }
+
+    .legal-content table th {
+      background: var(--surface-low);
+      color: var(--text-primary);
+      font-weight: 600;
+      text-align: left;
+      padding: 12px 16px;
+      border-bottom: 2px solid var(--surface-high);
+      white-space: nowrap;
+    }
+
+    .legal-content table td {
+      padding: 10px 16px;
+      border-bottom: 1px solid var(--surface-container);
+      vertical-align: top;
+    }
+
+    .legal-content table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .legal-content table tr:nth-child(even) {
+      background: var(--surface-low);
+    }
+
+    .legal-content table tr:hover {
+      background: var(--info-bg);
+    }
+
+    /* ─── Footer ─── */
+    .footer {
+      background: #0a0f1e;
+      padding: 64px 0 32px;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 48px;
+      margin-bottom: 48px;
+    }
+
+    .footer-brand-name {
+      font-size: 20px;
+      font-weight: 800;
+      color: #ffffff;
+      letter-spacing: -0.02em;
+      margin-bottom: 4px;
+    }
+
+    .footer-brand-sub {
+      font-size: 9px;
+      font-weight: 400;
+      color: rgba(255, 255, 255, 0.45);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 16px;
+    }
+
+    .footer-brand-desc {
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.5);
+      line-height: 1.6;
+      max-width: 320px;
+    }
+
+    .footer-col-title {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: rgba(255, 255, 255, 0.4);
+      margin-bottom: 20px;
+    }
+
+    .footer-col a {
+      display: block;
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.6);
+      padding: 6px 0;
+      transition: color var(--transition-fast);
+    }
+
+    .footer-col a:hover { color: #ffffff; }
+
+    .footer-bottom {
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      padding-top: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .footer-copyright {
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.35);
+    }
+
+    .footer-legal {
+      display: flex;
+      gap: 24px;
+    }
+
+    .footer-legal a {
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.35);
+      transition: color var(--transition-fast);
+    }
+
+    .footer-legal a:hover {
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    /* ─── Responsive ─── */
+    @media (max-width: 991px) {
+      .footer-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 32px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .legal-content h1 { font-size: 28px; }
+      .legal-content h2 { font-size: 19px; }
+      .legal-content { padding: 32px 16px 64px; }
+
+      .footer-grid {
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
+
+      .footer-bottom {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .footer-legal {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="legal-navbar">
+    <div class="container">
+      <a href="index.html" class="legal-navbar-brand">ConvertaFlow</a>
+      <a href="index.html" class="legal-navbar-back">&larr; Voltar ao site</a>
+    </div>
+  </nav>
+
+  <!-- Content -->
+  <main class="legal-content">
+    <h1>Política de Privacidade</h1>
+    <p class="legal-update"><strong>Última atualização:</strong> 07 de abril de 2026</p>
+
+    <hr>
+
+    <h2>1. Introdução</h2>
+    <p>A <strong>ConvertaFlow</strong> ("nós", "nosso" ou "Plataforma"), inscrita no CNPJ 23.248.724/0001-54, com sede na Rua Wanderley Junior, 225 – Campinas – São José/SC – CEP 88101-010, é uma plataforma SaaS de atendimento omnichannel, automação, CRM e inteligência artificial.</p>
+    <p>Esta Política de Privacidade descreve como coletamos, usamos, armazenamos, compartilhamos e protegemos os dados pessoais dos nossos <strong>Usuários</strong> (assinantes da plataforma) e dos <strong>Contatos Finais</strong> (pessoas cujos dados são processados pelos Usuários por meio da Plataforma).</p>
+    <p>Ao utilizar a ConvertaFlow, você concorda com as práticas descritas nesta Política, em conformidade com a <strong>Lei Geral de Proteção de Dados (LGPD – Lei nº 13.709/2018)</strong>, o <strong>Marco Civil da Internet (Lei nº 12.965/2014)</strong> e demais legislações aplicáveis.</p>
+
+    <hr>
+
+    <h2>2. Definições</h2>
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Termo</th>
+            <th>Significado</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Usuário</strong></td><td>Pessoa física ou jurídica que contrata e utiliza a plataforma ConvertaFlow</td></tr>
+          <tr><td><strong>Contato Final</strong></td><td>Pessoa cujos dados pessoais são processados pelo Usuário por meio da Plataforma</td></tr>
+          <tr><td><strong>Controlador</strong></td><td>O Usuário, que determina as finalidades e os meios de tratamento dos dados dos Contatos Finais</td></tr>
+          <tr><td><strong>Operador</strong></td><td>A ConvertaFlow, que realiza o tratamento de dados em nome do Controlador (Usuário)</td></tr>
+          <tr><td><strong>DPO/Encarregado</strong></td><td>Responsável pela comunicação entre a ConvertaFlow, os titulares de dados e a ANPD</td></tr>
+          <tr><td><strong>Organização</strong></td><td>Conta empresarial do Usuário dentro da plataforma, com dados isolados</td></tr>
+          <tr><td><strong>Plataforma</strong></td><td>O software ConvertaFlow, acessível em app.convertaflow.com</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <hr>
+
+    <h2>3. Papéis no Tratamento de Dados</h2>
+
+    <h3>3.1. ConvertaFlow como Controladora</h3>
+    <p>Somos <strong>Controladores</strong> dos dados pessoais dos nossos <strong>Usuários</strong> (assinantes), incluindo:</p>
+    <ul>
+      <li>Dados de cadastro e autenticação</li>
+      <li>Dados de cobrança e pagamento</li>
+      <li>Dados de uso e navegação na Plataforma</li>
+      <li>Dados de suporte e comunicações conosco</li>
+    </ul>
+
+    <h3>3.2. ConvertaFlow como Operadora</h3>
+    <p>Somos <strong>Operadores</strong> dos dados dos <strong>Contatos Finais</strong>, que são inseridos, importados ou recebidos pelos Usuários por meio da Plataforma. Neste caso:</p>
+    <ul>
+      <li>O <strong>Usuário é o Controlador</strong> e deve garantir a base legal para o tratamento</li>
+      <li>A ConvertaFlow processa os dados <strong>exclusivamente conforme as instruções do Usuário</strong></li>
+      <li>Não utilizamos os dados dos Contatos Finais para finalidades próprias</li>
+      <li>Não compartilhamos dados de Contatos Finais entre diferentes Organizações</li>
+    </ul>
+
+    <hr>
+
+    <h2>4. Dados que Coletamos</h2>
+
+    <h3>4.1. Dados dos Usuários (Assinantes)</h3>
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr><th>Categoria</th><th>Dados</th><th>Finalidade</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Cadastro</strong></td><td>Nome, e-mail, telefone, nome da empresa</td><td>Criação e gestão da conta</td></tr>
+          <tr><td><strong>Autenticação</strong></td><td>Credenciais de acesso, tokens de sessão</td><td>Segurança e controle de acesso</td></tr>
+          <tr><td><strong>Cobrança</strong></td><td>Dados de pagamento (PIX, cartão), endereço de cobrança, CPF/CNPJ</td><td>Processamento de pagamentos e emissão de notas fiscais</td></tr>
+          <tr><td><strong>Uso</strong></td><td>Logs de acesso, funcionalidades utilizadas, horários de login</td><td>Melhoria do serviço e suporte técnico</td></tr>
+          <tr><td><strong>Dispositivo</strong></td><td>Endereço IP, tipo de navegador, sistema operacional</td><td>Segurança, detecção de fraudes e gateway de pagamento</td></tr>
+          <tr><td><strong>Comunicação</strong></td><td>Mensagens de suporte, feedbacks, e-mails</td><td>Atendimento e melhoria do serviço</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>4.2. Dados dos Contatos Finais (Processados em Nome do Usuário)</h3>
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr><th>Categoria</th><th>Dados</th><th>Finalidade</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Identificação</strong></td><td>Nome, telefone, e-mail, empresa</td><td>Gestão de CRM pelo Usuário</td></tr>
+          <tr><td><strong>Comunicação</strong></td><td>Mensagens de texto, áudios, imagens, vídeos, documentos</td><td>Histórico de atendimento</td></tr>
+          <tr><td><strong>Transcrições</strong></td><td>Transcrições automáticas de áudios</td><td>Facilitar leitura e busca pelo Usuário</td></tr>
+          <tr><td><strong>Comportamento</strong></td><td>Tags, campos personalizados, pontuação de lead</td><td>Segmentação e gestão pelo Usuário</td></tr>
+          <tr><td><strong>Automação</strong></td><td>Dados de fluxos, campanhas, funil de vendas</td><td>Automação definida pelo Usuário</td></tr>
+          <tr><td><strong>IA e Memória</strong></td><td>Classificações de intenção, embeddings semânticos, resumos</td><td>Personalização de atendimento configurada pelo Usuário</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>4.3. Dados Coletados Automaticamente</h3>
+    <ul>
+      <li><strong>Cookies de sessão:</strong> necessários para autenticação e funcionamento da Plataforma</li>
+      <li><strong>Dados de conexão:</strong> endereço IP, geolocalização aproximada (país), utilizado para seleção de gateway de pagamento</li>
+      <li><strong>Logs do sistema:</strong> registros técnicos para segurança, monitoramento e resolução de problemas</li>
+    </ul>
+
+    <hr>
+
+    <h2>5. Base Legal para o Tratamento (LGPD Art. 7º)</h2>
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr><th>Finalidade</th><th>Base Legal</th><th>Artigo</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Prestação do serviço contratado</td><td>Execução de contrato</td><td>Art. 7º, V</td></tr>
+          <tr><td>Cobrança e faturamento</td><td>Execução de contrato</td><td>Art. 7º, V</td></tr>
+          <tr><td>Segurança e prevenção de fraudes</td><td>Legítimo interesse</td><td>Art. 7º, IX</td></tr>
+          <tr><td>Comunicações sobre o serviço</td><td>Execução de contrato</td><td>Art. 7º, V</td></tr>
+          <tr><td>Melhoria e desenvolvimento</td><td>Legítimo interesse</td><td>Art. 7º, IX</td></tr>
+          <tr><td>Cumprimento de obrigações legais</td><td>Obrigação legal</td><td>Art. 7º, II</td></tr>
+          <tr><td>Marketing direto da ConvertaFlow</td><td>Consentimento</td><td>Art. 7º, I</td></tr>
+          <tr><td>Envio de e-mails transacionais</td><td>Execução de contrato</td><td>Art. 7º, V</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <hr>
+
+    <h2>6. Compartilhamento de Dados</h2>
+
+    <h3>6.1. Prestadores de Serviço (Sub-operadores)</h3>
+    <p>Compartilhamos dados com terceiros estritamente necessários para a operação da Plataforma:</p>
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr><th>Serviço</th><th>Prestador</th><th>Finalidade</th><th>País</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Autenticação</strong></td><td>Clerk</td><td>Gestão de identidade e login seguro</td><td>EUA</td></tr>
+          <tr><td><strong>Pagamentos</strong></td><td>Asaas</td><td>Processamento de PIX e cartão (Brasil)</td><td>Brasil</td></tr>
+          <tr><td><strong>Pagamentos</strong></td><td>Stripe</td><td>Processamento de cartão (internacional)</td><td>EUA</td></tr>
+          <tr><td><strong>E-mail transacional</strong></td><td>AWS SES / Resend</td><td>Envio de e-mails do sistema</td><td>EUA</td></tr>
+          <tr><td><strong>Armazenamento</strong></td><td>Cloudflare R2</td><td>Armazenamento de mídias e arquivos</td><td>Global</td></tr>
+          <tr><td><strong>Hospedagem frontend</strong></td><td>Vercel</td><td>Hospedagem do aplicativo web</td><td>EUA</td></tr>
+          <tr><td><strong>Inteligência Artificial</strong></td><td>Anthropic (Claude)</td><td>Processamento de IA quando habilitado pelo Usuário</td><td>EUA</td></tr>
+          <tr><td><strong>Inteligência Artificial</strong></td><td>OpenAI</td><td>Embeddings e processamento opcional de IA</td><td>EUA</td></tr>
+          <tr><td><strong>Transcrição</strong></td><td>OpenAI (Whisper)</td><td>Transcrição de áudio (fallback)</td><td>EUA</td></tr>
+          <tr><td><strong>Monitoramento</strong></td><td>Sentry</td><td>Rastreamento de erros técnicos</td><td>EUA</td></tr>
+          <tr><td><strong>WhatsApp</strong></td><td>Meta Platforms</td><td>API oficial do WhatsApp Business</td><td>EUA</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>6.2. Transferência Internacional de Dados</h3>
+    <p>Alguns dos nossos sub-operadores estão localizados fora do Brasil. Essas transferências são realizadas em conformidade com a LGPD (Art. 33), com base em:</p>
+    <ul>
+      <li>Cláusulas contratuais específicas com cada prestador</li>
+      <li>Garantias de proteção equivalente ao padrão brasileiro</li>
+      <li>Necessidade para execução do contrato de prestação de serviço</li>
+    </ul>
+
+    <h3>6.3. Quando NÃO Compartilhamos</h3>
+    <ul>
+      <li><strong>Nunca</strong> vendemos dados pessoais a terceiros</li>
+      <li><strong>Nunca</strong> compartilhamos dados de Contatos Finais entre Organizações diferentes</li>
+      <li><strong>Nunca</strong> utilizamos dados de Contatos Finais para fins próprios de marketing</li>
+      <li><strong>Nunca</strong> compartilhamos dados com terceiros para finalidades incompatíveis com esta Política</li>
+    </ul>
+
+    <h3>6.4. Compartilhamento por Obrigação Legal</h3>
+    <p>Podemos compartilhar dados quando exigido por lei, ordem judicial, ou requisição de autoridade competente, incluindo a ANPD (Autoridade Nacional de Proteção de Dados).</p>
+
+    <hr>
+
+    <h2>7. Inteligência Artificial e Processamento Automatizado</h2>
+
+    <h3>7.1. Funcionalidades de IA</h3>
+    <p>A Plataforma oferece funcionalidades de inteligência artificial que processam dados de Contatos Finais <strong>quando habilitadas pelo Usuário</strong>, incluindo:</p>
+    <ul>
+      <li><strong>Classificação de intenção:</strong> categorização automática de mensagens recebidas</li>
+      <li><strong>Agentes de IA:</strong> respostas automatizadas configuradas pelo Usuário</li>
+      <li><strong>Memória semântica:</strong> embeddings vetoriais para busca contextual</li>
+      <li><strong>Transcrição de áudio:</strong> conversão de áudios em texto</li>
+      <li><strong>Geração de fluxos:</strong> sugestão de automações baseada em padrões</li>
+    </ul>
+
+    <h3>7.2. Controle do Usuário</h3>
+    <ul>
+      <li>Todas as funcionalidades de IA possuem <strong>controle individual de ativação</strong> (liga/desliga)</li>
+      <li>Quando desativadas, <strong>nenhum dado é enviado</strong> para processamento por provedores de IA</li>
+      <li>O Usuário pode configurar qual provedor de IA utilizar</li>
+      <li>O Usuário pode fornecer suas próprias chaves de API (BYOK), reduzindo o papel da ConvertaFlow no processamento</li>
+    </ul>
+
+    <h3>7.3. Dados Processados por IA</h3>
+    <p>Os dados enviados para processamento por IA incluem apenas o conteúdo necessário para a funcionalidade solicitada. Não retemos dados nos servidores dos provedores de IA além do tempo necessário para processar a solicitação.</p>
+
+    <hr>
+
+    <h2>8. Armazenamento e Retenção de Dados</h2>
+
+    <h3>8.1. Onde os Dados São Armazenados</h3>
+    <ul>
+      <li><strong>Banco de dados principal:</strong> servidor próprio (VPS) com PostgreSQL, em infraestrutura dedicada</li>
+      <li><strong>Cache e sessões:</strong> Redis em infraestrutura própria</li>
+      <li><strong>Mídias e arquivos:</strong> Cloudflare R2 (armazenamento compatível com S3)</li>
+      <li><strong>Frontend:</strong> Vercel (CDN global)</li>
+    </ul>
+
+    <h3>8.2. Isolamento de Dados</h3>
+    <p>Cada Organização possui um <strong>esquema de banco de dados fisicamente isolado</strong>. Isso significa que:</p>
+    <ul>
+      <li>Os dados de uma Organização <strong>nunca</strong> se misturam com os de outra</li>
+      <li>Cada Organização pode ser exportada ou excluída de forma independente</li>
+      <li>Acessos internos são registrados em log de auditoria imutável</li>
+    </ul>
+
+    <h3>8.3. Períodos de Retenção</h3>
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr><th>Tipo de Dado</th><th>Período de Retenção</th><th>Observação</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Dados da conta (Usuário)</strong></td><td>Enquanto a conta estiver ativa + 90 dias após cancelamento</td><td>Exclusão permanente após o período</td></tr>
+          <tr><td><strong>Mensagens e conversas</strong></td><td>30 dias (mínimo)</td><td>Período estendido com backup ativo</td></tr>
+          <tr><td><strong>Backups automáticos</strong></td><td>60 a 90 dias conforme o plano</td><td>Exclusão automática após o período</td></tr>
+          <tr><td><strong>Mídias e arquivos</strong></td><td>Vinculado ao período de backup</td><td>Mesma política de retenção</td></tr>
+          <tr><td><strong>Dados de cobrança</strong></td><td>5 anos após o último pagamento</td><td>Obrigação fiscal (CTN Art. 173)</td></tr>
+          <tr><td><strong>Logs de segurança</strong></td><td>6 meses</td><td>Padrão Marco Civil da Internet</td></tr>
+          <tr><td><strong>Dados de IA (embeddings)</strong></td><td>Enquanto a conta estiver ativa</td><td>Excluídos com a conta</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>8.4. Após o Cancelamento</h3>
+    <p>Ao cancelar a assinatura:</p>
+    <ol>
+      <li>O acesso à Plataforma é encerrado ao final do período já pago</li>
+      <li>Os dados permanecem armazenados por <strong>90 dias</strong> para possível reativação</li>
+      <li>Após 90 dias, os dados são <strong>permanentemente excluídos</strong>, incluindo:
+        <ul>
+          <li>Todos os dados do esquema da Organização</li>
+          <li>Mídias e arquivos no armazenamento</li>
+          <li>Backups associados</li>
+          <li>Embeddings e memórias de IA</li>
+        </ul>
+      </li>
+      <li>Dados de cobrança são mantidos conforme obrigação fiscal</li>
+    </ol>
+
+    <hr>
+
+    <h2>9. Segurança dos Dados</h2>
+
+    <h3>9.1. Medidas Técnicas</h3>
+    <ul>
+      <li><strong>Criptografia em trânsito:</strong> HTTPS/TLS obrigatório em todas as conexões</li>
+      <li><strong>Autenticação robusta:</strong> JWT com assinatura RS256 (assimétrica) via Clerk</li>
+      <li><strong>Isolamento multi-tenant:</strong> esquemas de banco de dados fisicamente separados</li>
+      <li><strong>Controle de acesso:</strong> permissões granulares por cargo (Proprietário, Gerente, Supervisor, Atendente, Visualizador)</li>
+      <li><strong>Proteção contra ataques:</strong> rate limiting, proteção contra força bruta, cabeçalhos de segurança (HSTS, CSP, X-Frame-Options)</li>
+      <li><strong>Proteção DDoS:</strong> Cloudflare na camada de borda</li>
+      <li><strong>Monitoramento:</strong> alertas em tempo real via Sentry e Grafana</li>
+    </ul>
+
+    <h3>9.2. Medidas Organizacionais</h3>
+    <ul>
+      <li><strong>Princípio do menor privilégio:</strong> cada usuário acessa apenas o que precisa</li>
+      <li><strong>Log de auditoria:</strong> toda impersonação por equipe interna é registrada com data, hora e motivo (imutável)</li>
+      <li><strong>Gestão de segredos:</strong> chaves e credenciais gerenciadas por cofre de segredos (nunca em código-fonte)</li>
+      <li><strong>Backup e recuperação:</strong> backups automáticos com criptografia</li>
+      <li><strong>Equipe treinada:</strong> acesso restrito e monitorado à infraestrutura</li>
+    </ul>
+
+    <h3>9.3. Notificação de Incidentes</h3>
+    <p>Em caso de incidente de segurança que comprometa dados pessoais:</p>
+    <ul>
+      <li>Notificaremos a <strong>ANPD</strong> e os <strong>titulares afetados</strong> em até <strong>72 horas</strong></li>
+      <li>Detalharemos a natureza do incidente, dados afetados e medidas adotadas</li>
+      <li>Implementaremos ações corretivas imediatas</li>
+    </ul>
+
+    <hr>
+
+    <h2>10. Direitos dos Titulares (LGPD Art. 18)</h2>
+
+    <h3>10.1. Direitos dos Usuários (Assinantes)</h3>
+    <p>Você pode exercer os seguintes direitos em relação aos seus dados pessoais:</p>
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr><th>Direito</th><th>Descrição</th><th>Como Exercer</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Acesso</strong></td><td>Saber quais dados possuímos sobre você</td><td>Contato com DPO</td></tr>
+          <tr><td><strong>Correção</strong></td><td>Corrigir dados incompletos ou desatualizados</td><td>Configurações da conta ou contato com DPO</td></tr>
+          <tr><td><strong>Exclusão</strong></td><td>Solicitar a eliminação dos seus dados</td><td>Contato com DPO</td></tr>
+          <tr><td><strong>Portabilidade</strong></td><td>Receber seus dados em formato estruturado</td><td>Exportação via Plataforma ou contato com DPO</td></tr>
+          <tr><td><strong>Revogação de consentimento</strong></td><td>Retirar consentimento dado anteriormente</td><td>Configurações da conta ou contato com DPO</td></tr>
+          <tr><td><strong>Oposição</strong></td><td>Opor-se a tratamento baseado em legítimo interesse</td><td>Contato com DPO</td></tr>
+          <tr><td><strong>Informação</strong></td><td>Saber com quem seus dados foram compartilhados</td><td>Contato com DPO</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>10.2. Direitos dos Contatos Finais</h3>
+    <p>Os Contatos Finais devem exercer seus direitos diretamente com o <strong>Usuário</strong> (Controlador). A ConvertaFlow colaborará com o Usuário para atender às solicitações, incluindo:</p>
+    <ul>
+      <li>Exclusão de dados do Contato Final da base do Usuário</li>
+      <li>Exportação de dados em formato estruturado</li>
+      <li>Correção de informações</li>
+    </ul>
+
+    <h3>10.3. Prazo de Resposta</h3>
+    <p>Responderemos às solicitações em até <strong>15 dias úteis</strong>, conforme a LGPD.</p>
+
+    <h3>10.4. Canal de Contato</h3>
+    <ul>
+      <li><strong>E-mail do DPO/Encarregado:</strong> privacidade@convertaflow.com</li>
+      <li><strong>E-mail geral:</strong> contato@convertaflow.com</li>
+    </ul>
+
+    <hr>
+
+    <h2>11. Cookies e Tecnologias de Rastreamento</h2>
+
+    <h3>11.1. Cookies Utilizados</h3>
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr><th>Cookie</th><th>Tipo</th><th>Finalidade</th><th>Duração</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Sessão de autenticação</strong></td><td>Essencial</td><td>Manter o usuário autenticado</td><td>Sessão</td></tr>
+          <tr><td><strong>Preferências</strong></td><td>Funcional</td><td>Idioma, tema, configurações</td><td>Persistente</td></tr>
+          <tr><td><strong>Segurança</strong></td><td>Essencial</td><td>Proteção CSRF e detecção de fraudes</td><td>Sessão</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>11.2. O que NÃO Utilizamos</h3>
+    <ul>
+      <li><strong>Não</strong> utilizamos cookies de publicidade ou remarketing</li>
+      <li><strong>Não</strong> utilizamos rastreadores de terceiros para fins de marketing</li>
+      <li><strong>Não</strong> compartilhamos dados de navegação com redes de publicidade</li>
+    </ul>
+
+    <hr>
+
+    <h2>12. Menores de Idade</h2>
+    <p>A ConvertaFlow é destinada exclusivamente a <strong>maiores de 18 anos</strong>. Não coletamos intencionalmente dados de menores. Se tomarmos conhecimento de que dados de menores foram coletados, excluiremos tais dados imediatamente.</p>
+
+    <hr>
+
+    <h2>13. Alterações nesta Política</h2>
+    <p>Podemos atualizar esta Política periodicamente. Em caso de alterações significativas:</p>
+    <ul>
+      <li>Publicaremos a versão atualizada em <strong>app.convertaflow.com</strong> e <strong>convertaflow.com</strong></li>
+      <li>Notificaremos os Usuários por <strong>e-mail</strong> e/ou <strong>notificação na Plataforma</strong></li>
+      <li>A data de "Última atualização" no topo desta página será alterada</li>
+      <li>O uso continuado da Plataforma após a notificação constitui aceitação das alterações</li>
+    </ul>
+
+    <hr>
+
+    <h2>14. Legislação Aplicável e Foro</h2>
+    <p>Esta Política é regida pela legislação brasileira, em especial:</p>
+    <ul>
+      <li><strong>LGPD</strong> – Lei nº 13.709/2018</li>
+      <li><strong>Marco Civil da Internet</strong> – Lei nº 12.965/2014</li>
+      <li><strong>Código de Defesa do Consumidor</strong> – Lei nº 8.078/1990</li>
+    </ul>
+    <p><strong>Foro:</strong> Comarca de São José, Estado de Santa Catarina, Brasil.</p>
+
+    <hr>
+
+    <h2>15. Contato</h2>
+    <p>Para dúvidas, solicitações ou reclamações relacionadas a esta Política de Privacidade:</p>
+    <ul>
+      <li><strong>Encarregado de Dados (DPO):</strong> privacidade@convertaflow.com</li>
+      <li><strong>Contato geral:</strong> contato@convertaflow.com</li>
+      <li><strong>Endereço:</strong> Rua Wanderley Junior, 225 – Campinas – São José/SC – CEP 88101-010</li>
+      <li><strong>ANPD:</strong> Caso não fique satisfeito com nossa resposta, você pode registrar uma reclamação junto à Autoridade Nacional de Proteção de Dados (www.gov.br/anpd)</li>
+    </ul>
+
+    <hr>
+
+    <p><em>ConvertaFlow — CNPJ 23.248.724/0001-54</em><br>
+    <em>Documento vigente a partir de 07 de abril de 2026.</em></p>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer" role="contentinfo">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <div class="footer-brand-name">ConvertaFlow</div>
+          <div class="footer-brand-sub">Omnichannel + IA</div>
+          <p class="footer-brand-desc">A plataforma que transforma conversas em conversões. Centralize WhatsApp, Instagram e Facebook com IA integrada.</p>
+        </div>
+
+        <div class="footer-col">
+          <div class="footer-col-title">Produto</div>
+          <a href="index.html#recursos">Recursos</a>
+          <a href="index.html#precos">Preços</a>
+          <a href="index.html#ia">Lia IA</a>
+          <a href="index.html#automacao">Automação</a>
+          <a href="index.html#canais">Canais</a>
+        </div>
+
+        <div class="footer-col">
+          <div class="footer-col-title">Recursos</div>
+          <a href="index.html#faq">FAQ</a>
+          <a href="#">Central de Ajuda</a>
+          <a href="#">Blog</a>
+          <a href="#">Changelog</a>
+          <a href="#">Status</a>
+        </div>
+
+        <div class="footer-col">
+          <div class="footer-col-title">Empresa</div>
+          <a href="#">Sobre</a>
+          <a href="#">Contato</a>
+          <a href="#">Parceiros</a>
+          <a href="#">Carreiras</a>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div class="footer-copyright">
+          &copy; 2024–2026 ConvertaFlow. Todos os direitos reservados.
+        </div>
+        <div class="footer-legal">
+          <a href="uso.html">Termos de Uso</a>
+          <a href="privacidade.html">Política de Privacidade</a>
+          <a href="termos.html">Termos de Serviço</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

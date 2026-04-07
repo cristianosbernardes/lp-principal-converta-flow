@@ -6,7 +6,7 @@
   "scripts": {
     "sync": "node scripts/sync.js",
     "build": "node scripts/build.js",
-    "dev": "node scripts/sync.js && node scripts/build.js && npx serve . -p 3333 -s",
+    "dev": "node scripts/sync.js && node scripts/build.js && npx serve . -p 3333",
     "prebuild": "node scripts/sync.js"
   }
 }
