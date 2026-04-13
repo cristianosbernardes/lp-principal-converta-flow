@@ -16,3 +16,10 @@ CLAUDE.md
 data/plans.json
 scripts/sync.js
 scripts/build.js
+
+.vercel
+
+# ─── Screenshots de auditoria (temporários) ───
+audit-*.png
+final-*.png
+full-page-*.png
