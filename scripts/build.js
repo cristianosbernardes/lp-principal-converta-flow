@@ -595,7 +595,10 @@ function docsLayout({ title, description, canonical, bodyContent, sidebar, toc, 
       ${sidebar ? `<button type="button" class="docs-sidebar-toggle" aria-label="Abrir menu de navegação">
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" x2="21" y1="6" y2="6"/><line x1="3" x2="21" y1="12" y2="12"/><line x1="3" x2="21" y1="18" y2="18"/></svg>
       </button>` : ""}
-      <a href="/" class="docs-navbar-brand">ConvertaFlow</a>
+      <a href="/" class="docs-navbar-brand">
+        <img src="/icon.svg" alt="" class="docs-navbar-brand-icon" width="28" height="28" />
+        <span>ConvertaFlow</span>
+      </a>
       <a href="/docs" class="docs-navbar-divider" aria-label="Central de Ajuda">Ajuda</a>
       ${showHeaderSearch ? `
       <form action="/docs" method="get" class="docs-navbar-search" role="search">
@@ -1073,12 +1076,16 @@ h1, h2, h3, h4, h5, h6 { color: var(--text-primary); font-weight: 700; line-heig
   gap: 16px;
 }
 .docs-navbar-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   font-size: 18px;
   font-weight: 800;
   color: var(--text-primary);
   letter-spacing: -0.02em;
   flex-shrink: 0;
 }
+.docs-navbar-brand-icon { display: block; flex-shrink: 0; }
 .docs-navbar-divider {
   font-size: 13px;
   color: var(--text-muted);
