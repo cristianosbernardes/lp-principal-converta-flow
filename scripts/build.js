@@ -1065,7 +1065,7 @@ h1, h2, h3, h4, h5, h6 { color: var(--text-primary); font-weight: 700; line-heig
   box-shadow: var(--shadow-sm);
 }
 .docs-navbar-inner {
-  max-width: 1400px;
+  max-width: 1200px;
   margin: 0 auto;
   padding: 0 24px;
   display: flex;
@@ -1163,15 +1163,15 @@ h1, h2, h3, h4, h5, h6 { color: var(--text-primary); font-weight: 700; line-heig
 /* ─── Layout grid (main) ─── */
 .docs-main { padding: 40px 0 80px; }
 .docs-layout {
-  max-width: 1400px;
+  max-width: 1200px;
   margin: 0 auto;
   padding: 0 24px;
   display: grid;
-  gap: 40px;
+  gap: 32px;
 }
 .docs-layout--1col { grid-template-columns: 1fr; }
-.docs-layout--2col { grid-template-columns: 260px minmax(0, 1fr); }
-.docs-layout--3col { grid-template-columns: 260px minmax(0, 1fr) 220px; }
+.docs-layout--2col { grid-template-columns: 240px minmax(0, 1fr); }
+.docs-layout--3col { grid-template-columns: 240px minmax(0, 1fr) 200px; }
 .docs-content { min-width: 0; }
 
 /* ─── Sidebar ─── */
@@ -1739,7 +1739,7 @@ h1, h2, h3, h4, h5, h6 { color: var(--text-primary); font-weight: 700; line-heig
 .footer-legal a:hover { color: rgba(255,255,255,0.7); }
 
 /* ─── Responsive ─── */
-@media (max-width: 1180px) {
+@media (max-width: 1100px) {
   /* TOC some em telas medianas para dar ar ao conteudo */
   .docs-layout--3col { grid-template-columns: 240px minmax(0, 1fr); }
   .docs-toc-wrap { display: none; }
