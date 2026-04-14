@@ -1,6 +1,6 @@
 {
   "name": "lp-principal-converta-flow",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": true,
   "description": "Landing page principal do ConvertaFlow — auto-sincronizada com o app",
   "scripts": {
@@ -8,5 +8,8 @@
     "build": "node scripts/build.js",
     "dev": "node scripts/sync.js && node scripts/build.js && npx serve . -p 3333",
     "prebuild": "node scripts/sync.js"
+  },
+  "dependencies": {
+    "marked": "^14.1.3"
   }
 }

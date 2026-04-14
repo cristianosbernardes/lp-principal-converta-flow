@@ -7,19 +7,21 @@ Thumbs.db
 .claude/
 .playwright-mcp/
 
-# ─── Arquivos sensíveis (sync do app — nunca vão pro GitHub) ───
+# ─── Docs internos do app (sincronizados localmente, nao vao pro repo publico) ───
 BRAND.md
 DESIGN.md
 LIA.md
 FLOWBUILDER.md
 CLAUDE.md
-data/plans.json
-scripts/sync.js
-scripts/build.js
+
+# ─── Artefatos gerados pelo build (Vercel regenera em cada deploy) ───
+data/
+docs/
+docs-styles.css
 
 .vercel
 
-# ─── Screenshots de auditoria (temporários) ───
+# ─── Screenshots de auditoria (temporarios) ───
 audit-*.png
 final-*.png
 full-page-*.png
