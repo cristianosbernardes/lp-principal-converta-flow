@@ -175,6 +175,88 @@ email-engine :8001                      ← AWS SES (container isolado)
 
 **Vantagem sobre o parsing atual de migrations:** dados sempre consistentes com o banco, zero chance de parser quebrar com migration nova.
 
+### 3.4. `GET /api/public/changelog`
+
+**Descrição:** Notas de lançamento (changelog) da plataforma. Adicionado em 2026-04-14.
+
+**Por que existe:** as releases vivem em TypeScript (`frontend/src/lib/changelog-data.ts`) porque têm estrutura rica (`version`, `date`, `title`, `groups` com tipos `new|improved|fixed|removed`). Não dá pra colocar em markdown sem perder estrutura.
+
+**Resposta (200 OK):**
+
+```json
+{
+  "version": "2026-04-14T21:45:00Z",
+  "latestVersion": "0.5.8-beta",
+  "releases": [
+    {
+      "version": "0.5.8-beta",
+      "date": "14 Abril 2026",
+      "title": "Central de Ajuda Redesenhada",
+      "groups": [
+        {
+          "type": "new",
+          "items": [
+            { "text": "Central de Ajuda totalmente nova com sidebar de navegacao permanente..." }
+          ]
+        },
+        {
+          "type": "improved",
+          "items": [
+            { "text": "Feedback 'Este artigo foi util?' agora fica salvo na sua conta..." }
+          ]
+        },
+        {
+          "type": "removed",
+          "items": [
+            { "text": "Aba 'Pergunte a IA' dentro da Central de Ajuda..." }
+          ]
+        }
+      ]
+    },
+    {
+      "version": "0.5.6-beta",
+      "date": "11 Abril 2026",
+      "title": "Cabecalhos Refinados",
+      "groups": [
+        { "type": "improved", "items": [{ "text": "..." }] }
+      ]
+    }
+  ]
+}
+```
+
+**Tipos de grupo (para renderização visual):**
+
+| `type` | Label | Cor sugerida (foreground) | Cor sugerida (background) |
+|---|---|---|---|
+| `new` | Novo | `#22c55e` (verde) | `#dcfce7` |
+| `improved` | Melhorado | `#3b82f6` (azul) | `#dbeafe` |
+| `fixed` | Corrigido | `#f59e0b` (âmbar) | `#fef9c3` |
+| `removed` | Removido | `#ef4444` (vermelho) | `#fee2e2` |
+
+**Ordem:** array cronológico reverso — release mais recente primeiro.
+
+**Endpoint também disparado pelo workflow `trigger-lp-rebuild.yml`** quando `frontend/src/lib/changelog-data.ts` muda no app.
+
+**O que a LP precisa implementar (pendente em 2026-04-14):**
+
+1. **`scripts/sync.js`** — adicionar fetch do novo endpoint:
+   ```js
+   const changelog = await fetchRemote('/api/public/changelog')
+   fs.writeFileSync('data/changelog.json', JSON.stringify(changelog, null, 2))
+   ```
+2. **`scripts/build.js`** — gerar página `/docs/changelog`:
+   - Usar o mesmo shell 3 colunas (sidebar + conteúdo)
+   - Header da página igual ao de categoria (eyebrow colorido + h1 + subtítulo)
+   - Lista de releases em 1 coluna (cronológico), cada release = card com v{version} + título + data + groups coloridos
+   - Breadcrumb: "Central de Ajuda > Novidades e Atualizacoes"
+3. **Sidebar da LP** — incluir categoria `changelog` como ÚLTIMA (mesma ordem do app):
+   - `id: "changelog"`, `title: "Novidades e Atualizacoes"`, `icon: "SparklesIcon"`, `color: "#7c3aed"`
+   - A sidebar deve mostrar este card sem contador de artigos (é uma página especial, não lista de artigos)
+4. **Home `/docs`** — renderizar o card Novidades por último no grid de categorias (já é a ordem natural de `HELP_CATEGORIES` do app depois do refactor 2026-04-14).
+
+**Referência de design:** a página do app em `frontend/src/app/(dashboard)/help/docs/changelog/page.tsx` tem o layout final aprovado.
+
 ---
 
 ## 4. Deploy Hook da Vercel
