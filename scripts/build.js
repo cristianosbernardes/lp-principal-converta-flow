@@ -22,6 +22,41 @@ const DOCS_INDEX_FILE = path.join(LP_ROOT, "data", "docs", "index.json");
 const DOCS_DATA_DIR = path.join(LP_ROOT, "data", "docs");
 const DOCS_OUT_DIR = path.join(LP_ROOT, "docs");
 
+// Slugs mostrados como "Artigos populares" na home da central.
+// Curadoria manual por ora — substituir por ranking automatico quando
+// houver tracking de acessos (ver FU no handoff).
+const FEATURED_SLUGS = [
+  "getting-started-launchpad",
+  "connections-whatsapp",
+  "08-campanhas-e-marketing",
+  "13-lia-ia-assistente",
+  "02-planos-e-precos",
+];
+
+// Icones Lucide inline (body-only) — sao envolvidos pelo renderIcon().
+// Mantem a LP 100% self-contained, sem dependencia runtime do client.
+const LUCIDE_ICON_BODIES = {
+  SparklesIcon: '<path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.582a.5.5 0 0 1 0 .962L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/><path d="M20 3v4"/><path d="M22 5h-4"/><path d="M4 17v2"/><path d="M5 18H3"/>',
+  BookOpenIcon: '<path d="M12 7v14"/><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/>',
+  MessageCircleIcon: '<path d="M7.9 20A9 9 0 1 0 4 16.1L2 22z"/>',
+  PlugIcon: '<path d="M12 22v-5"/><path d="M9 8V2"/><path d="M15 8V2"/><path d="M18 8v5a4 4 0 0 1-4 4h-4a4 4 0 0 1-4-4V8z"/>',
+  UserIcon: '<path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>',
+  MegaphoneIcon: '<path d="m3 11 18-5v12L3 14v-3z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/>',
+  ZapIcon: '<path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/>',
+  BrainCircuitIcon: '<path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z"/><path d="M9 13a4.5 4.5 0 0 0 3-4"/><path d="M12 13h4"/><path d="M12 18h6a2 2 0 0 1 2 2v1"/><path d="M12 8h8"/><path d="M16 8V5a2 2 0 0 1 2-2"/>',
+  MailIcon: '<rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>',
+  CreditCardIcon: '<rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/>',
+  Settings2Icon: '<path d="M20 7h-9"/><path d="M14 17H5"/><circle cx="17" cy="17" r="3"/><circle cx="7" cy="7" r="3"/>',
+  ShieldAlertIcon: '<path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="M12 8v4"/><path d="M12 16h.01"/>',
+  HeadphonesIcon: '<path d="M3 14h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H4a1 1 0 0 1-1-1zm18 0h-3a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h2a1 1 0 0 0 1-1z"/><path d="M21 14a9 9 0 0 0-18 0"/>',
+  ScaleIcon: '<path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/>',
+};
+
+function renderIcon(name, size = 24) {
+  const body = LUCIDE_ICON_BODIES[name] || LUCIDE_ICON_BODIES.BookOpenIcon;
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${body}</svg>`;
+}
+
 // ══════════════════════════════════════════════
 // 1. Pricing cards (codigo existente preservado)
 // ══════════════════════════════════════════════
@@ -454,12 +489,21 @@ function formatDatePtBR(isoDate) {
 // ── Index: lista de categorias ──
 
 function generateDocsIndexPage(index) {
-  const cards = index.categories
-    .filter((cat) => cat.articles.length > 0)
+  const categoriesWithArticles = index.categories.filter((cat) => cat.articles.length > 0);
+
+  // Mapa slug -> { article, category } para resolver populares e alimentar a busca
+  const articleIndex = {};
+  for (const cat of categoriesWithArticles) {
+    for (const art of cat.articles) {
+      articleIndex[art.slug] = { article: art, category: cat };
+    }
+  }
+
+  const cards = categoriesWithArticles
     .map((cat) => `
-      <a href="/docs/${cat.id}" class="docs-cat-card" style="--cat-color: ${cat.color}">
+      <a href="/docs/${cat.id}" class="docs-cat-card" data-cat-id="${escapeHtml(cat.id)}" data-cat-title="${escapeHtml(cat.title)}" style="--cat-color: ${cat.color}">
         <div class="docs-cat-icon" style="background: ${cat.color}15; color: ${cat.color}">
-          <span class="docs-cat-icon-name">${escapeHtml(cat.title.charAt(0))}</span>
+          ${renderIcon(cat.icon, 24)}
         </div>
         <h3 class="docs-cat-title">${escapeHtml(cat.title)}</h3>
         <p class="docs-cat-desc">${escapeHtml(cat.description)}</p>
@@ -468,14 +512,79 @@ function generateDocsIndexPage(index) {
     `)
     .join("");
 
+  // Artigos populares (curadoria manual via FEATURED_SLUGS)
+  const featuredCards = FEATURED_SLUGS
+    .map((slug) => articleIndex[slug])
+    .filter(Boolean)
+    .map(({ article, category }) => `
+      <a href="/docs/${category.id}/${article.slug}" class="docs-featured-card">
+        <span class="docs-featured-eyebrow" style="color: ${category.color}">
+          <span class="docs-featured-eyebrow-icon" style="color: ${category.color}">${renderIcon(category.icon, 14)}</span>
+          ${escapeHtml(category.title)}
+        </span>
+        <span class="docs-featured-title">${escapeHtml(article.title)}</span>
+      </a>
+    `)
+    .join("");
+
+  // Indice inline (embed no HTML) para filtro client-side — evita fetch extra
+  const searchIndexData = categoriesWithArticles.flatMap((cat) =>
+    cat.articles.map((a) => ({
+      slug: a.slug,
+      title: a.title,
+      description: a.description || "",
+      cat: cat.id,
+      catTitle: cat.title,
+      catColor: cat.color,
+    }))
+  );
+
   const bodyContent = `
     <div class="docs-hero">
-      <h1>Central de Ajuda</h1>
+      <h1>Como podemos te ajudar?</h1>
       <p>Guias, tutoriais e respostas para tirar o máximo da plataforma ConvertaFlow.</p>
+      <div class="docs-search-wrap">
+        <span class="docs-search-icon" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        </span>
+        <input
+          type="search"
+          id="docs-search-input"
+          class="docs-search-input"
+          placeholder="Pesquisar artigos..."
+          autocomplete="off"
+          aria-label="Pesquisar artigos"
+        />
+        <button type="button" id="docs-search-clear" class="docs-search-clear" aria-label="Limpar busca" hidden>&times;</button>
+      </div>
     </div>
-    <div class="docs-cat-grid">
-      ${cards}
-    </div>
+
+    ${featuredCards ? `
+    <section class="docs-featured" id="docs-featured-section">
+      <h2 class="docs-section-title">Artigos populares</h2>
+      <div class="docs-featured-grid">
+        ${featuredCards}
+      </div>
+    </section>
+    ` : ""}
+
+    <section class="docs-categories" id="docs-categories-section">
+      <h2 class="docs-section-title">Explorar por categoria</h2>
+      <div class="docs-cat-grid">
+        ${cards}
+      </div>
+    </section>
+
+    <section class="docs-search-results" id="docs-search-results" hidden>
+      <h2 class="docs-section-title" id="docs-search-results-title">Resultados</h2>
+      <div class="docs-search-results-list" id="docs-search-results-list"></div>
+      <div class="docs-no-results" id="docs-no-results" hidden>
+        <p>Nada encontrado. Tente outros termos.</p>
+      </div>
+    </section>
+
+    <script id="docs-search-index" type="application/json">${JSON.stringify(searchIndexData)}</script>
+    <script>${DOCS_SEARCH_JS}</script>
   `;
 
   return docsLayout({
@@ -608,6 +717,100 @@ function generateDocsArticlePage(article, category, allArticlesMap, prevNext) {
 
   return fullHtml;
 }
+
+// ── JS client-side da busca na home /docs ──
+
+const DOCS_SEARCH_JS = `
+(function () {
+  var data;
+  try { data = JSON.parse(document.getElementById("docs-search-index").textContent); }
+  catch (e) { return; }
+
+  var input = document.getElementById("docs-search-input");
+  var clearBtn = document.getElementById("docs-search-clear");
+  var featured = document.getElementById("docs-featured-section");
+  var categories = document.getElementById("docs-categories-section");
+  var resultsSection = document.getElementById("docs-search-results");
+  var resultsList = document.getElementById("docs-search-results-list");
+  var resultsTitle = document.getElementById("docs-search-results-title");
+  var noResults = document.getElementById("docs-no-results");
+
+  function normalize(s) {
+    return (s || "").toLowerCase().normalize("NFD").replace(/[\\u0300-\\u036f]/g, "");
+  }
+
+  function render(matches) {
+    resultsList.innerHTML = matches.map(function (m) {
+      return '<a href="/docs/' + m.cat + '/' + m.slug + '" class="docs-search-result">' +
+        '<span class="docs-search-result-eyebrow" style="color:' + m.catColor + '">' + m.catTitle + '</span>' +
+        '<span class="docs-search-result-title">' + escapeText(m.title) + '</span>' +
+        (m.description ? '<span class="docs-search-result-desc">' + escapeText(m.description) + '</span>' : '') +
+      '</a>';
+    }).join("");
+  }
+
+  function escapeText(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+
+  function onInput() {
+    var q = normalize(input.value.trim());
+    if (!q) {
+      clearBtn.hidden = true;
+      if (featured) featured.hidden = false;
+      categories.hidden = false;
+      resultsSection.hidden = true;
+      return;
+    }
+    clearBtn.hidden = false;
+    if (featured) featured.hidden = true;
+    categories.hidden = true;
+    resultsSection.hidden = false;
+
+    var matches = data.filter(function (item) {
+      return normalize(item.title).indexOf(q) !== -1 ||
+             normalize(item.description).indexOf(q) !== -1 ||
+             normalize(item.catTitle).indexOf(q) !== -1;
+    });
+
+    resultsTitle.textContent = matches.length
+      ? matches.length + (matches.length === 1 ? " artigo encontrado" : " artigos encontrados")
+      : "Resultados";
+
+    if (matches.length) {
+      noResults.hidden = true;
+      resultsList.hidden = false;
+      render(matches);
+    } else {
+      noResults.hidden = false;
+      resultsList.hidden = true;
+      resultsList.innerHTML = "";
+    }
+  }
+
+  input.addEventListener("input", onInput);
+  clearBtn.addEventListener("click", function () {
+    input.value = "";
+    input.focus();
+    onInput();
+  });
+
+  // Atalho "/" para focar a busca (padrao do Stripe)
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "/" && document.activeElement !== input && !e.ctrlKey && !e.metaKey) {
+      e.preventDefault();
+      input.focus();
+    }
+    if (e.key === "Escape" && document.activeElement === input) {
+      input.value = "";
+      input.blur();
+      onInput();
+    }
+  });
+})();
+`;
 
 // ── CSS compartilhado (docs-styles.css) ──
 
@@ -747,6 +950,165 @@ h1, h2, h3, h4, h5, h6 { color: var(--text-primary); font-weight: 700; line-heig
 .docs-cat-title { font-size: 18px; color: var(--text-primary); }
 .docs-cat-desc { font-size: 14px; color: var(--text-muted); line-height: 1.5; }
 .docs-cat-count { font-size: 12px; color: var(--text-muted); font-weight: 500; margin-top: auto; }
+.docs-cat-icon svg { display: block; }
+
+/* ─── Hero search ─── */
+.docs-search-wrap {
+  position: relative;
+  max-width: 640px;
+  margin: 32px auto 0;
+}
+.docs-search-input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 16px 52px 16px 52px;
+  font: inherit;
+  font-size: 16px;
+  color: var(--text-primary);
+  background: var(--surface-card);
+  border: 1px solid var(--surface-high);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  outline: none;
+  transition: border-color var(--transition-base), box-shadow var(--transition-base);
+}
+.docs-search-input::placeholder { color: var(--text-muted); }
+.docs-search-input:focus {
+  border-color: var(--brand-primary);
+  box-shadow: 0 0 0 4px rgba(30, 127, 212, 0.12), var(--shadow-md);
+}
+.docs-search-icon {
+  position: absolute;
+  left: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  pointer-events: none;
+  display: flex;
+}
+.docs-search-clear {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: none;
+  background: var(--surface-high);
+  color: var(--text-muted);
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background var(--transition-base);
+}
+.docs-search-clear:hover { background: var(--surface-highest, #e5e7eb); color: var(--text-primary); }
+.docs-search-clear[hidden] { display: none; }
+
+/* ─── Section titles (home) ─── */
+.docs-section-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 20px;
+  max-width: 1100px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ─── Featured articles ─── */
+.docs-featured { margin-bottom: 56px; }
+.docs-featured-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 12px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.docs-featured-card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 14px 16px;
+  background: var(--surface-card);
+  border: 1px solid var(--surface-high);
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  transition: transform var(--transition-base), border-color var(--transition-base), box-shadow var(--transition-base);
+}
+.docs-featured-card:hover {
+  transform: translateY(-1px);
+  border-color: var(--brand-primary);
+  box-shadow: var(--shadow-sm);
+}
+.docs-featured-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.docs-featured-eyebrow-icon { display: inline-flex; }
+.docs-featured-eyebrow-icon svg { display: block; }
+.docs-featured-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.35;
+}
+
+/* ─── Categories section wrapper ─── */
+.docs-categories { margin-bottom: 40px; }
+
+/* ─── Search results (home) ─── */
+.docs-search-results { margin-bottom: 40px; }
+.docs-search-results-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.docs-search-result {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 14px 18px;
+  background: var(--surface-card);
+  border: 1px solid var(--surface-high);
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  transition: border-color var(--transition-base), transform var(--transition-base);
+}
+.docs-search-result:hover {
+  border-color: var(--brand-primary);
+  transform: translateX(2px);
+}
+.docs-search-result-eyebrow {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.docs-search-result-title { font-size: 16px; font-weight: 600; color: var(--text-primary); }
+.docs-search-result-desc { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
+.docs-no-results {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 48px 20px;
+  text-align: center;
+  color: var(--text-muted);
+  background: var(--surface-card);
+  border: 1px dashed var(--surface-high);
+  border-radius: var(--radius-lg);
+}
 
 /* ─── Article list (category page) ─── */
 .docs-article-list {
@@ -914,6 +1276,10 @@ h1, h2, h3, h4, h5, h6 { color: var(--text-primary); font-weight: 700; line-heig
   .docs-article-body h2 { font-size: 19px; }
   .docs-main { padding: 32px 0 64px; }
   .docs-prev-next-wrapper { grid-template-columns: 1fr; }
+  .docs-search-input { padding: 14px 44px 14px 44px; font-size: 15px; }
+  .docs-search-icon { left: 14px; }
+  .docs-search-wrap { margin-top: 24px; }
+  .docs-featured-grid { grid-template-columns: 1fr; }
   .footer-grid { grid-template-columns: 1fr; }
   .footer-bottom { flex-direction: column; text-align: center; }
   .footer-legal { flex-wrap: wrap; justify-content: center; }
