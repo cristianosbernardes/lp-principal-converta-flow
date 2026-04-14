@@ -1002,14 +1002,61 @@ function buildDocsPages() {
 
   console.log(`  ✔ ${catCount} categoria(s) + ${artCount} artigo(s) gerados em /docs`);
   if (skipCount > 0) console.log(`  ⚠ ${skipCount} artigo(s) pulado(s) (sem data/docs/{slug}.json)`);
+
+  const expectedArticles = categoriesWithArticles.reduce((n, c) => n + c.articles.length, 0);
+  return {
+    expectedCategories: categoriesWithArticles.length,
+    generatedCategories: catCount,
+    expectedArticles,
+    generatedArticles: artCount,
+    skippedArticles: skipCount,
+  };
+}
+
+function runHealthCheck({ docsStats, plansCount }) {
+  const problems = [];
+
+  if (docsStats) {
+    if (docsStats.generatedArticles !== docsStats.expectedArticles) {
+      problems.push(
+        `Artigos: esperados ${docsStats.expectedArticles}, gerados ${docsStats.generatedArticles}` +
+          (docsStats.skippedArticles ? ` (${docsStats.skippedArticles} sem data/docs/{slug}.json)` : "")
+      );
+    }
+    if (docsStats.generatedCategories !== docsStats.expectedCategories) {
+      problems.push(
+        `Categorias: esperadas ${docsStats.expectedCategories}, geradas ${docsStats.generatedCategories}`
+      );
+    }
+  }
+
+  if (plansCount !== null && plansCount < 4) {
+    problems.push(`Planos: esperados ao menos 4 (essencial/profissional/business/enterprise), encontrados ${plansCount}`);
+  }
+
+  if (problems.length > 0) {
+    console.error("\n❌ Health check falhou:");
+    for (const p of problems) console.error(`  • ${p}`);
+    console.error("\nBuild abortado. Corrija os problemas acima antes de fazer deploy.\n");
+    process.exit(1);
+  }
+
+  console.log("\n🩺 Health check OK");
+  if (docsStats) {
+    console.log(`   • ${docsStats.generatedCategories} categorias + ${docsStats.generatedArticles} artigos`);
+  }
+  if (plansCount !== null) console.log(`   • ${plansCount} planos`);
 }
 
 function main() {
   console.log("🏗️  ConvertaFlow LP — Build iniciado");
 
+  let plansCount = null;
+
   // 1. Atualiza index.html com planos
   if (fs.existsSync(PLANS_FILE)) {
     const plans = JSON.parse(fs.readFileSync(PLANS_FILE, "utf-8"));
+    plansCount = plans.length;
     console.log(`\n📊 Atualizando index.html (${plans.length} planos)...`);
     updateIndexHtml(plans);
   } else {
@@ -1022,7 +1069,10 @@ function main() {
 
   // 2. Gera paginas /docs/*
   console.log("\n📚 Gerando paginas /docs/*...");
-  buildDocsPages();
+  const docsStats = buildDocsPages();
+
+  // 3. Health check — aborta o build se algo faltar
+  runHealthCheck({ docsStats, plansCount });
 
   console.log("\n✅ Build concluido!\n");
 }
