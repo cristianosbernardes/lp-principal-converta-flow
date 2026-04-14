@@ -3,13 +3,43 @@
 > Contrato de sincronização entre a **Landing Page** (`convertaflow.com`) e o **App principal** (`app.convertaflow.com`).
 >
 > Este documento é a fonte de verdade sobre como a LP consome dados do App.
-> **Versão:** 1.0 | **Criado em:** 2026-04-13
+> **Versão:** 2.0 | **Criado em:** 2026-04-13 | **Implementado em:** 2026-04-14
+
+---
+
+## 0. Status de implementação (LEIA PRIMEIRO)
+
+**Tudo já está configurado e deployado.** Este documento descreve como o sistema funciona — não é mais um plano a executar.
+
+| Item | Status | Localização |
+|---|---|---|
+| API pública no app (`/api/public/*`) | ✅ Deployada | Commit `2cfe43e` no repo `cristianosbernardes/converta-flow` |
+| Deploy Hook na Vercel da LP | ✅ Criado | Nome: `app-docs-updated`, branch `main` |
+| Secret `LP_DEPLOY_HOOK_URL` no GitHub do app | ✅ Configurado | Repo `cristianosbernardes/converta-flow` |
+| Env var `DOCS_API_URL` na Vercel da LP | ✅ Setada | Valor: `https://app.convertaflow.com` (production/preview/development) |
+| GitHub Action `trigger-lp-rebuild` | ✅ Ativo | `.github/workflows/trigger-lp-rebuild.yml` no app |
+| Scripts `sync.js` + `build.js` (modo dual) | ✅ Commitados | Commit `b772e08` neste repo |
+| Páginas `/docs/*` gerando localmente | ✅ Testado | 13 categorias + 73 artigos |
+| Páginas `/docs/*` deployadas em produção | ⏳ Ver abaixo | Depende do primeiro build remoto da Vercel |
+
+**Fluxo completo após implementação:**
+```
+Cristiano edita doc no app (docs/knowledge/*.md ou help-data.ts)
+   → commit + push no repo do app
+     → GitHub Action trigger-lp-rebuild detecta mudança
+       → POST no Deploy Hook da Vercel
+         → Vercel rebuilda a LP
+           → npm run build chama sync.js (modo remoto via DOCS_API_URL)
+             → sync.js baixa docs da API publica do app
+               → build.js gera /docs/* HTMLs estaticos
+                 → LP deployada em convertaflow.com/docs/*
+```
 
 ---
 
 ## 1. Contexto e objetivo
 
-Hoje o `scripts/sync.js` desta LP lê arquivos diretamente do filesystem (pasta vizinha `../app-converta-flow`). Isso funciona apenas na máquina do Cristiano.
+Até 2026-04-13 o `scripts/sync.js` lia arquivos diretamente do filesystem (pasta vizinha `../app-converta-flow`). Isso funcionava apenas na máquina do Cristiano.
 
 **Problema:** para atualizar a LP, era necessário:
 1. Abrir o terminal local da LP
@@ -355,6 +385,83 @@ R: Adicione no App em 2 lugares: (1) arquivo `docs/knowledge/novo-artigo.md`, (2
 **P: E a Central de Ajuda interna do App (`/help/docs`) continua funcionando?**
 R: Sim, intacta. Ela lê os mesmos arquivos diretamente — os endpoints públicos são só uma camada adicional de exposição.
 
+**P: Preciso commitar `data/` e `docs/` gerados?**
+R: Não. Estão no `.gitignore`. A Vercel gera em cada build via `npm run build` (que chama `prebuild` = sync.js, depois build.js).
+
+**P: Como testar a integração completa sem fazer push?**
+R: Rode localmente com `DOCS_API_URL=https://app.convertaflow.com npm run dev`. Se a API estiver no ar, você está testando o mesmo fluxo da Vercel build.
+
 ---
 
-**Fim do documento.** Qualquer dúvida de integração, consulte o Cristiano antes de implementar.
+## 11. Arquivos tocados nesta implementação (2026-04-14)
+
+### Repo `cristianosbernardes/converta-flow` (app)
+
+**Novos:**
+- `frontend/src/app/api/public/docs/route.ts`
+- `frontend/src/app/api/public/docs/[slug]/route.ts`
+- `frontend/src/app/api/public/plans/route.ts`
+- `.github/workflows/trigger-lp-rebuild.yml`
+
+**Modificados:**
+- `frontend/src/middleware.ts` — adicionado `/api/public(.*)` à `isPublicRoute` do Clerk
+
+### Repo `cristianosbernardes/lp-principal-converta-flow` (landing)
+
+**Novos:**
+- `SYNC-API.md` (este documento)
+- `scripts/sync.js` — reescrito com modo dual local/remoto
+- `scripts/build.js` — estendido para gerar `/docs/*`
+- `package-lock.json`
+
+**Modificados:**
+- `package.json` — dependência `marked@^14.1.3`, versão 1.1.0
+- `vercel.json` — removido rewrite universal pra index.html (quebrava /docs/*); adicionado `buildCommand` e `cleanUrls`
+- `.gitignore` — liberou `scripts/*` e `SYNC-API.md`; ignorou artefatos de build (`data/`, `docs/`, `docs-styles.css`)
+- `CLAUDE.md` — atualizado pra descrever o novo fluxo (não vai pro repo por `.gitignore`)
+
+**Não versionados (gerados em build):**
+- `data/plans.json`, `data/docs/*.json`
+- `docs/**/index.html` (86 arquivos: 1 index + 13 categorias + 72 artigos)
+- `docs-styles.css`
+
+### Configurações na Vercel (team `team_Mn6DTH6bmXmMQ3rwrjZTakpV`)
+
+**Projeto `lp-principal-converta-flow`:**
+- Env var `DOCS_API_URL=https://app.convertaflow.com` (production/preview/development)
+- Deploy Hook `app-docs-updated` criado (branch `main`)
+
+**Projeto `converta-flow`:**
+- Env var `BACKEND_PYTHON_URL=https://ai.convertaflow.com` (production/preview)
+
+### Secret no GitHub (`cristianosbernardes/converta-flow`)
+
+- `LP_DEPLOY_HOOK_URL` — URL do Deploy Hook da LP (usado pelo workflow `trigger-lp-rebuild`)
+
+---
+
+## 12. Observações importantes
+
+### Backend Python está em `ai.convertaflow.com`, não em `api.convertaflow.com`
+
+- `api.convertaflow.com` → backend Node.js (porta 8080 na VPS) — tudo protegido por Clerk
+- `ai.convertaflow.com` → backend Python (FastAPI, porta 8000 na VPS) — tem endpoints públicos como `/billing/plans`
+
+A rota `/api/public/plans` no Next.js faz proxy para `${BACKEND_PYTHON_URL}/billing/plans`, por isso precisa de `BACKEND_PYTHON_URL=https://ai.convertaflow.com` na Vercel.
+
+### Links internos (doc:slug)
+
+Nos arquivos `.md` do app, use `[texto](doc:slug)`. O `build.js` resolve automaticamente para `/docs/{categoria}/{slug}`. Isso funciona porque:
+1. `help-data.ts` mapeia slug → categoria
+2. `GET /api/public/docs` retorna esse mapeamento
+3. `build.js` usa o mapa ao renderizar markdown
+
+### `.gitignore` deliberado
+
+Os arquivos `BRAND.md`, `DESIGN.md`, `LIA.md`, `FLOWBUILDER.md`, `CLAUDE.md` estão no `.gitignore` por decisão do Cristiano — são documentos internos/confidenciais. **Não mexer nessa regra sem autorização explícita.**
+
+Os scripts `sync.js`, `build.js` e `SYNC-API.md` FORAM liberados nessa implementação após discussão com o Cristiano. Contêm lógica genérica (fetch de API, render markdown, template HTML).
+
+---
+
+**Fim do documento.** Qualquer dúvida de integração ou alteração estrutural, consulte o Cristiano antes de implementar.
