@@ -411,10 +411,155 @@ function renderMarkdownWithLinks(markdown, allArticlesMap) {
   return html;
 }
 
+// SVG icon reusado no header e em outros lugares (lupa)
+const SEARCH_ICON_SVG = '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>';
+
+/**
+ * Extrai headings H2/H3 do HTML ja renderizado (com ids injetados pelo
+ * renderMarkdownWithLinks). Retorna [{level, id, text}].
+ */
+function extractTocFromHtml(html) {
+  const result = [];
+  const re = /<h([23]) id="([^"]+)">([\s\S]*?)<\/h\1>/g;
+  let m;
+  while ((m = re.exec(html)) !== null) {
+    result.push({
+      level: parseInt(m[1], 10),
+      id: m[2],
+      text: m[3].replace(/<[^>]+>/g, "").trim(),
+    });
+  }
+  return result;
+}
+
+function renderToc(headings) {
+  if (!headings.length) return "";
+  const items = headings
+    .map(
+      (h) =>
+        `<a href="#${h.id}" class="docs-toc-link docs-toc-link--h${h.level}" data-toc-target="${h.id}">${escapeHtml(h.text)}</a>`
+    )
+    .join("");
+  return `<div class="docs-toc"><div class="docs-toc-title">Nesta página</div>${items}</div>`;
+}
+
+/**
+ * Sidebar de navegacao entre categorias/artigos. current pode ser:
+ *   { categoryId } ou { categoryId, articleSlug } ou null
+ * A categoria "atual" aparece expandida com seus artigos visiveis.
+ */
+function renderDocsSidebar(index, current) {
+  const cats = index.categories.filter((c) => c.articles.length > 0);
+  const currentCat = current ? current.categoryId : null;
+  const currentSlug = current ? current.articleSlug : null;
+
+  const groups = cats
+    .map((cat) => {
+      const isActive = cat.id === currentCat;
+      const items = isActive
+        ? `<div class="docs-sidebar-items">${cat.articles
+            .map(
+              (a) =>
+                `<a href="/docs/${cat.id}/${a.slug}" class="docs-sidebar-item ${a.slug === currentSlug ? "is-current" : ""}">${escapeHtml(a.title)}</a>`
+            )
+            .join("")}</div>`
+        : "";
+      return `
+        <div class="docs-sidebar-group ${isActive ? "is-active" : ""}">
+          <a href="/docs/${cat.id}" class="docs-sidebar-group-title" style="--cat-color:${cat.color}">
+            <span class="docs-sidebar-group-icon" style="color:${cat.color}">${renderIcon(cat.icon, 16)}</span>
+            <span class="docs-sidebar-group-label">${escapeHtml(cat.title)}</span>
+            <span class="docs-sidebar-group-count">${cat.articles.length}</span>
+          </a>
+          ${items}
+        </div>
+      `;
+    })
+    .join("");
+
+  return `
+    <nav class="docs-sidebar-nav" aria-label="Navegação da documentação">
+      <a href="/docs" class="docs-sidebar-home ${!currentCat ? "is-current" : ""}">
+        <span class="docs-sidebar-home-icon">${renderIcon("BookOpenIcon", 16)}</span>
+        Central de Ajuda
+      </a>
+      ${groups}
+    </nav>
+  `;
+}
+
+/**
+ * JS inline injetado na pagina de artigo — scroll-spy no TOC + feedback "Foi util".
+ */
+const DOCS_ARTICLE_JS = `
+(function () {
+  // Scroll-spy no TOC
+  var tocLinks = document.querySelectorAll(".docs-toc-link[data-toc-target]");
+  if (tocLinks.length && "IntersectionObserver" in window) {
+    var map = {};
+    tocLinks.forEach(function (link) {
+      var t = document.getElementById(link.dataset.tocTarget);
+      if (t) map[link.dataset.tocTarget] = link;
+    });
+    var targets = Object.keys(map).map(function (id) { return document.getElementById(id); }).filter(Boolean);
+    var active;
+    var obs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) {
+          if (active) active.classList.remove("is-active");
+          active = map[e.target.id];
+          if (active) active.classList.add("is-active");
+        }
+      });
+    }, { rootMargin: "-96px 0px -66% 0px", threshold: 0 });
+    targets.forEach(function (t) { obs.observe(t); });
+  }
+
+  // Feedback "Foi util?"
+  var feedback = document.querySelector(".docs-feedback");
+  if (feedback) {
+    var slug = feedback.dataset.slug;
+    var key = "cf-docs-vote-" + slug;
+    var thanks = feedback.querySelector(".docs-feedback-thanks");
+    var btns = feedback.querySelectorAll("button[data-vote]");
+    var existing = null;
+    try { existing = localStorage.getItem(key); } catch (e) {}
+    function mark(vote) {
+      btns.forEach(function (b) {
+        b.disabled = true;
+        if (b.dataset.vote === vote) b.classList.add("is-selected");
+      });
+      if (thanks) thanks.hidden = false;
+    }
+    if (existing) mark(existing);
+    btns.forEach(function (b) {
+      b.addEventListener("click", function () {
+        try { localStorage.setItem(key, b.dataset.vote); } catch (e) {}
+        mark(b.dataset.vote);
+      });
+    });
+  }
+
+  // Sidebar drawer (mobile)
+  var toggle = document.querySelector(".docs-sidebar-toggle");
+  var sidebar = document.getElementById("docs-sidebar");
+  var backdrop = document.getElementById("docs-sidebar-backdrop");
+  if (toggle && sidebar) {
+    function open() { sidebar.classList.add("is-open"); if (backdrop) backdrop.hidden = false; }
+    function close() { sidebar.classList.remove("is-open"); if (backdrop) backdrop.hidden = true; }
+    toggle.addEventListener("click", function () {
+      sidebar.classList.contains("is-open") ? close() : open();
+    });
+    if (backdrop) backdrop.addEventListener("click", close);
+  }
+})();
+`;
+
 /**
  * Layout compartilhado para todas as paginas de docs.
+ * sidebar/toc sao strings HTML ou null (home nao tem nenhum dos dois).
  */
-function docsLayout({ title, description, canonical, bodyContent, breadcrumb }) {
+function docsLayout({ title, description, canonical, bodyContent, sidebar, toc, showHeaderSearch, extraScripts }) {
   return `<!DOCTYPE html>
 <html lang="pt-BR" dir="ltr">
 <head>
@@ -446,25 +591,39 @@ function docsLayout({ title, description, canonical, bodyContent, breadcrumb }) 
 <body>
 
   <nav class="docs-navbar">
-    <div class="container">
+    <div class="docs-navbar-inner">
+      ${sidebar ? `<button type="button" class="docs-sidebar-toggle" aria-label="Abrir menu de navegação">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" x2="21" y1="6" y2="6"/><line x1="3" x2="21" y1="12" y2="12"/><line x1="3" x2="21" y1="18" y2="18"/></svg>
+      </button>` : ""}
       <a href="/" class="docs-navbar-brand">ConvertaFlow</a>
+      <a href="/docs" class="docs-navbar-divider" aria-label="Central de Ajuda">Ajuda</a>
+      ${showHeaderSearch ? `
+      <form action="/docs" method="get" class="docs-navbar-search" role="search">
+        <span class="docs-navbar-search-icon" aria-hidden="true">${SEARCH_ICON_SVG}</span>
+        <input type="search" name="q" class="docs-navbar-search-input" placeholder="Pesquisar artigos..." aria-label="Pesquisar artigos" autocomplete="off" />
+      </form>
+      ` : ""}
       <div class="docs-navbar-right">
-        <a href="/docs" class="docs-navbar-link">Central de Ajuda</a>
         <a href="/" class="docs-navbar-back">&larr; Voltar ao site</a>
       </div>
     </div>
   </nav>
 
-  ${breadcrumb || ""}
+  ${sidebar ? '<div class="docs-sidebar-backdrop" id="docs-sidebar-backdrop" hidden></div>' : ""}
 
   <main class="docs-main">
-    <div class="container">
-      ${bodyContent}
+    <div class="docs-layout ${sidebar && toc ? "docs-layout--3col" : sidebar ? "docs-layout--2col" : "docs-layout--1col"}">
+      ${sidebar ? `<aside class="docs-sidebar" id="docs-sidebar">${sidebar}</aside>` : ""}
+      <div class="docs-content">
+        ${bodyContent}
+      </div>
+      ${toc ? `<aside class="docs-toc-wrap">${toc}</aside>` : ""}
     </div>
   </main>
 
   ${renderFooter()}
 
+  ${extraScripts ? `<script>${extraScripts}</script>` : ""}
 </body>
 </html>`;
 }
@@ -592,13 +751,15 @@ function generateDocsIndexPage(index) {
     description: "Guias, tutoriais e respostas sobre WhatsApp, campanhas, IA, automação e CRM no ConvertaFlow.",
     canonical: "https://convertaflow.com/docs",
     bodyContent,
-    breadcrumb: breadcrumbHtml([{ label: "Central de Ajuda" }]),
+    sidebar: null,
+    toc: null,
+    showHeaderSearch: false,
   });
 }
 
 // ── Category: lista de artigos da categoria ──
 
-function generateDocsCategoryPage(category) {
+function generateDocsCategoryPage(category, index) {
   const articles = category.articles
     .map((art) => `
       <a href="/docs/${category.id}/${art.slug}" class="docs-article-card">
@@ -610,11 +771,16 @@ function generateDocsCategoryPage(category) {
     .join("");
 
   const bodyContent = `
-    <div class="docs-hero">
+    <nav class="docs-breadcrumb-inline" aria-label="Você está em">
+      <a href="/docs">Central de Ajuda</a>
+      <span class="docs-breadcrumb-sep" aria-hidden="true">/</span>
+      <span class="docs-breadcrumb-current">${escapeHtml(category.title)}</span>
+    </nav>
+    <header class="docs-page-header">
       <div class="docs-hero-eyebrow" style="color: ${category.color}">Categoria</div>
       <h1>${escapeHtml(category.title)}</h1>
-      <p>${escapeHtml(category.description)}</p>
-    </div>
+      <p class="docs-page-desc">${escapeHtml(category.description)}</p>
+    </header>
     <div class="docs-article-list">
       ${articles}
     </div>
@@ -625,20 +791,22 @@ function generateDocsCategoryPage(category) {
     description: category.description,
     canonical: `https://convertaflow.com/docs/${category.id}`,
     bodyContent,
-    breadcrumb: breadcrumbHtml([
-      { label: "Central de Ajuda", href: "/docs" },
-      { label: category.title },
-    ]),
+    sidebar: renderDocsSidebar(index, { categoryId: category.id }),
+    toc: null,
+    showHeaderSearch: true,
+    extraScripts: DOCS_ARTICLE_JS,
   });
 }
 
 // ── Article: artigo individual ──
 
-function generateDocsArticlePage(article, category, allArticlesMap, prevNext) {
+function generateDocsArticlePage(article, category, allArticlesMap, prevNext, index) {
   const html = renderMarkdownWithLinks(article.content, allArticlesMap);
 
   // Remove H1 do inicio (title ja vem no hero) — renderizado pelo marked
   const htmlNoH1 = html.replace(/^\s*<h1[^>]*>.*?<\/h1>\s*/i, "");
+
+  const tocHeadings = extractTocFromHtml(htmlNoH1);
 
   const prevLink = prevNext.prev
     ? `<a href="/docs/${category.id}/${prevNext.prev.slug}" class="docs-prev-next docs-prev">
@@ -657,21 +825,39 @@ function generateDocsArticlePage(article, category, allArticlesMap, prevNext) {
   const readingTime = article.readingTimeMinutes || 1;
 
   const bodyContent = `
+    <nav class="docs-breadcrumb-inline" aria-label="Você está em">
+      <a href="/docs">Central de Ajuda</a>
+      <span class="docs-breadcrumb-sep" aria-hidden="true">/</span>
+      <a href="/docs/${category.id}">${escapeHtml(category.title)}</a>
+      <span class="docs-breadcrumb-sep" aria-hidden="true">/</span>
+      <span class="docs-breadcrumb-current">${escapeHtml(article.title)}</span>
+    </nav>
     <article class="docs-article">
       <header class="docs-article-header">
-        <div class="docs-article-eyebrow">
-          <a href="/docs/${category.id}" style="color: ${category.color}">${escapeHtml(category.title)}</a>
-          <span class="docs-article-dot">·</span>
+        <h1>${escapeHtml(article.title)}</h1>
+        <p class="docs-article-desc">${escapeHtml(article.description)}</p>
+        <div class="docs-article-meta">
           <span>${readingTime} min de leitura</span>
           ${updatedAtStr ? `<span class="docs-article-dot">·</span><span>Atualizado em ${updatedAtStr}</span>` : ""}
         </div>
-        <h1>${escapeHtml(article.title)}</h1>
-        <p class="docs-article-desc">${escapeHtml(article.description)}</p>
       </header>
 
       <div class="docs-article-body">
         ${htmlNoH1}
       </div>
+
+      <section class="docs-feedback" data-slug="${escapeHtml(article.slug)}">
+        <h3 class="docs-feedback-title">Este artigo foi útil?</h3>
+        <div class="docs-feedback-buttons">
+          <button type="button" data-vote="yes" class="docs-feedback-btn">
+            <span aria-hidden="true">👍</span> Sim
+          </button>
+          <button type="button" data-vote="no" class="docs-feedback-btn">
+            <span aria-hidden="true">👎</span> Não
+          </button>
+        </div>
+        <p class="docs-feedback-thanks" hidden>Obrigado pelo feedback!</p>
+      </section>
 
       <footer class="docs-article-footer">
         <div class="docs-prev-next-wrapper">
@@ -703,19 +889,16 @@ function generateDocsArticlePage(article, category, allArticlesMap, prevNext) {
     </script>
   `;
 
-  const fullHtml = docsLayout({
+  return docsLayout({
     title: article.title,
     description: article.description,
     canonical: `https://convertaflow.com/docs/${category.id}/${article.slug}`,
     bodyContent: bodyContent + jsonLd,
-    breadcrumb: breadcrumbHtml([
-      { label: "Central de Ajuda", href: "/docs" },
-      { label: category.title, href: `/docs/${category.id}` },
-      { label: article.title },
-    ]),
+    sidebar: renderDocsSidebar(index, { categoryId: category.id, articleSlug: article.slug }),
+    toc: renderToc(tocHeadings),
+    showHeaderSearch: true,
+    extraScripts: DOCS_ARTICLE_JS,
   });
-
-  return fullHtml;
 }
 
 // ── JS client-side da busca na home /docs ──
@@ -797,6 +980,17 @@ const DOCS_SEARCH_JS = `
     onInput();
   });
 
+  // Prefill via ?q= (busca do header das paginas internas redireciona pra ca)
+  try {
+    var params = new URLSearchParams(window.location.search);
+    var initialQ = params.get("q");
+    if (initialQ) {
+      input.value = initialQ;
+      onInput();
+      input.focus();
+    }
+  } catch (e) {}
+
   // Atalho "/" para focar a busca (padrao do Stripe)
   document.addEventListener("keydown", function (e) {
     if (e.key === "/" && document.activeElement !== input && !e.ctrlKey && !e.metaKey) {
@@ -864,37 +1058,315 @@ h1, h2, h3, h4, h5, h6 { color: var(--text-primary); font-weight: 700; line-heig
 .docs-navbar {
   background: #ffffff;
   border-bottom: 1px solid var(--surface-high);
-  padding: 16px 0;
+  padding: 12px 0;
   position: sticky;
   top: 0;
   z-index: 100;
   box-shadow: var(--shadow-sm);
 }
-.docs-navbar .container { display: flex; align-items: center; justify-content: space-between; }
-.docs-navbar-brand { font-size: 18px; font-weight: 800; color: var(--text-primary); letter-spacing: -0.02em; }
-.docs-navbar-right { display: flex; gap: 24px; align-items: center; }
+.docs-navbar-inner {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.docs-navbar-brand {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+  flex-shrink: 0;
+}
+.docs-navbar-divider {
+  font-size: 13px;
+  color: var(--text-muted);
+  font-weight: 500;
+  padding: 3px 10px;
+  background: var(--surface-low);
+  border-radius: var(--radius-sm, 6px);
+  flex-shrink: 0;
+  transition: background var(--transition-fast);
+}
+.docs-navbar-divider:hover { background: var(--surface-high); color: var(--text-primary); }
+.docs-navbar-search {
+  flex: 1;
+  max-width: 420px;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.docs-navbar-search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  pointer-events: none;
+  display: flex;
+}
+.docs-navbar-search-input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 8px 12px 8px 38px;
+  font: inherit;
+  font-size: 14px;
+  color: var(--text-primary);
+  background: var(--surface-low);
+  border: 1px solid var(--surface-high);
+  border-radius: var(--radius-md);
+  outline: none;
+  transition: border-color var(--transition-base), background var(--transition-base);
+}
+.docs-navbar-search-input::placeholder { color: var(--text-muted); }
+.docs-navbar-search-input:focus {
+  background: #fff;
+  border-color: var(--brand-primary);
+  box-shadow: 0 0 0 3px rgba(30, 127, 212, 0.1);
+}
+.docs-navbar-right { display: flex; gap: 20px; align-items: center; margin-left: auto; }
 .docs-navbar-link, .docs-navbar-back {
   font-size: 14px;
   color: var(--text-secondary);
   font-weight: 500;
   transition: color var(--transition-fast);
+  white-space: nowrap;
 }
 .docs-navbar-link:hover, .docs-navbar-back:hover { color: var(--brand-primary); }
-
-/* ─── Breadcrumb ─── */
-.docs-breadcrumb {
-  background: var(--surface-low);
-  border-bottom: 1px solid var(--surface-high);
-  padding: 12px 0;
+.docs-sidebar-toggle {
+  display: none;
+  background: transparent;
+  border: none;
+  padding: 6px;
+  color: var(--text-primary);
+  cursor: pointer;
+  border-radius: var(--radius-sm, 6px);
 }
-.docs-breadcrumb .container { display: flex; align-items: center; gap: 8px; font-size: 13px; flex-wrap: wrap; }
-.docs-breadcrumb a { color: var(--brand-primary); font-weight: 500; }
-.docs-breadcrumb a:hover { color: var(--brand-dark); text-decoration: underline; }
-.docs-breadcrumb-sep { color: var(--text-muted); }
-.docs-breadcrumb-current { color: var(--text-muted); font-weight: 500; }
+.docs-sidebar-toggle:hover { background: var(--surface-low); }
 
-/* ─── Hero ─── */
-.docs-main { padding: 48px 0 80px; }
+/* ─── Breadcrumb inline (dentro do conteudo) ─── */
+.docs-breadcrumb-inline {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+  color: var(--text-muted);
+}
+.docs-breadcrumb-inline a { color: var(--text-secondary); font-weight: 500; }
+.docs-breadcrumb-inline a:hover { color: var(--brand-primary); }
+.docs-breadcrumb-sep { color: var(--text-muted); }
+.docs-breadcrumb-current { color: var(--text-primary); font-weight: 500; }
+
+/* ─── Layout grid (main) ─── */
+.docs-main { padding: 40px 0 80px; }
+.docs-layout {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: grid;
+  gap: 40px;
+}
+.docs-layout--1col { grid-template-columns: 1fr; }
+.docs-layout--2col { grid-template-columns: 260px minmax(0, 1fr); }
+.docs-layout--3col { grid-template-columns: 260px minmax(0, 1fr) 220px; }
+.docs-content { min-width: 0; }
+
+/* ─── Sidebar ─── */
+.docs-sidebar {
+  position: sticky;
+  top: 80px;
+  align-self: start;
+  max-height: calc(100vh - 100px);
+  overflow-y: auto;
+  padding-right: 12px;
+  scrollbar-width: thin;
+}
+.docs-sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 14px;
+}
+.docs-sidebar-home {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  color: var(--text-primary);
+  font-weight: 600;
+  border-radius: var(--radius-sm, 6px);
+  margin-bottom: 8px;
+  transition: background var(--transition-fast);
+}
+.docs-sidebar-home:hover { background: var(--surface-low); }
+.docs-sidebar-home.is-current { background: var(--surface-low); }
+.docs-sidebar-home-icon { display: flex; color: var(--text-muted); }
+.docs-sidebar-group { display: flex; flex-direction: column; }
+.docs-sidebar-group-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  color: var(--text-secondary);
+  font-weight: 600;
+  border-radius: var(--radius-sm, 6px);
+  transition: background var(--transition-fast), color var(--transition-fast);
+}
+.docs-sidebar-group-title:hover { background: var(--surface-low); color: var(--text-primary); }
+.docs-sidebar-group.is-active .docs-sidebar-group-title {
+  color: var(--text-primary);
+  background: var(--surface-low);
+}
+.docs-sidebar-group-icon { display: inline-flex; }
+.docs-sidebar-group-icon svg { display: block; }
+.docs-sidebar-group-label { flex: 1; }
+.docs-sidebar-group-count {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-muted);
+  background: var(--surface-high);
+  padding: 2px 6px;
+  border-radius: 10px;
+}
+.docs-sidebar-items {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  margin: 4px 0 12px 28px;
+  padding-left: 10px;
+  border-left: 1px solid var(--surface-high);
+}
+.docs-sidebar-item {
+  padding: 6px 10px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  border-radius: var(--radius-sm, 6px);
+  transition: background var(--transition-fast), color var(--transition-fast);
+  line-height: 1.4;
+}
+.docs-sidebar-item:hover { background: var(--surface-low); color: var(--text-primary); }
+.docs-sidebar-item.is-current {
+  background: rgba(30, 127, 212, 0.08);
+  color: var(--brand-primary);
+  font-weight: 600;
+}
+.docs-sidebar-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(13, 27, 62, 0.4);
+  z-index: 90;
+}
+
+/* ─── TOC (direita, artigos) ─── */
+.docs-toc-wrap {
+  position: sticky;
+  top: 80px;
+  align-self: start;
+  max-height: calc(100vh - 100px);
+  overflow-y: auto;
+}
+.docs-toc {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-left: 16px;
+  border-left: 1px solid var(--surface-high);
+  font-size: 13px;
+}
+.docs-toc-title {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 8px;
+}
+.docs-toc-link {
+  padding: 4px 0;
+  color: var(--text-secondary);
+  line-height: 1.4;
+  transition: color var(--transition-fast);
+  border-left: 2px solid transparent;
+  margin-left: -18px;
+  padding-left: 16px;
+}
+.docs-toc-link:hover { color: var(--text-primary); }
+.docs-toc-link--h3 { padding-left: 28px; font-size: 12px; }
+.docs-toc-link.is-active {
+  color: var(--brand-primary);
+  font-weight: 600;
+  border-left-color: var(--brand-primary);
+}
+
+/* ─── Article page header (Fase 2) ─── */
+.docs-page-header { margin-bottom: 32px; }
+.docs-page-header h1 { font-size: 32px; margin-bottom: 8px; letter-spacing: -0.02em; }
+.docs-page-desc { font-size: 16px; color: var(--text-muted); line-height: 1.6; }
+
+.docs-article-meta {
+  font-size: 13px;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+/* ─── Foi util? (feedback) ─── */
+.docs-feedback {
+  margin-top: 64px;
+  padding: 24px;
+  background: var(--surface-low);
+  border-radius: var(--radius-lg);
+  text-align: center;
+}
+.docs-feedback-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 16px;
+}
+.docs-feedback-buttons {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.docs-feedback-btn {
+  padding: 8px 20px;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  background: #fff;
+  color: var(--text-primary);
+  border: 1px solid var(--surface-high);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: border-color var(--transition-base), transform var(--transition-base);
+}
+.docs-feedback-btn:hover:not(:disabled) {
+  border-color: var(--brand-primary);
+  transform: translateY(-1px);
+}
+.docs-feedback-btn:disabled { cursor: default; opacity: 0.6; }
+.docs-feedback-btn.is-selected {
+  opacity: 1;
+  border-color: var(--brand-primary);
+  background: rgba(30, 127, 212, 0.08);
+  color: var(--brand-primary);
+}
+.docs-feedback-thanks {
+  margin-top: 12px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+/* ─── Hero (home) ─── */
+.docs-hero { text-align: center; max-width: 720px; margin: 0 auto 48px; }
 .docs-hero { text-align: center; max-width: 720px; margin: 0 auto 48px; }
 .docs-hero-eyebrow {
   font-size: 12px;
@@ -1267,11 +1739,38 @@ h1, h2, h3, h4, h5, h6 { color: var(--text-primary); font-weight: 700; line-heig
 .footer-legal a:hover { color: rgba(255,255,255,0.7); }
 
 /* ─── Responsive ─── */
+@media (max-width: 1180px) {
+  /* TOC some em telas medianas para dar ar ao conteudo */
+  .docs-layout--3col { grid-template-columns: 240px minmax(0, 1fr); }
+  .docs-toc-wrap { display: none; }
+}
 @media (max-width: 991px) {
   .footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
+  .docs-layout--2col, .docs-layout--3col { grid-template-columns: 1fr; gap: 24px; }
+  .docs-sidebar-toggle { display: inline-flex; align-items: center; }
+  .docs-navbar-divider { display: none; }
+  .docs-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 280px;
+    max-width: 85vw;
+    height: 100vh;
+    max-height: none;
+    background: #fff;
+    padding: 72px 16px 24px 20px;
+    border-right: 1px solid var(--surface-high);
+    box-shadow: var(--shadow-lg, 0 10px 30px rgba(0,0,0,0.15));
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+    z-index: 95;
+  }
+  .docs-sidebar.is-open { transform: translateX(0); }
+  .docs-sidebar-backdrop:not([hidden]) { display: block; }
 }
 @media (max-width: 640px) {
   .docs-hero h1 { font-size: 28px; }
+  .docs-page-header h1 { font-size: 26px; }
   .docs-article-header h1 { font-size: 24px; }
   .docs-article-body h2 { font-size: 19px; }
   .docs-main { padding: 32px 0 64px; }
@@ -1280,6 +1779,9 @@ h1, h2, h3, h4, h5, h6 { color: var(--text-primary); font-weight: 700; line-heig
   .docs-search-icon { left: 14px; }
   .docs-search-wrap { margin-top: 24px; }
   .docs-featured-grid { grid-template-columns: 1fr; }
+  .docs-navbar-right { gap: 12px; }
+  .docs-navbar-back { font-size: 13px; }
+  .docs-navbar-search { max-width: none; }
   .footer-grid { grid-template-columns: 1fr; }
   .footer-bottom { flex-direction: column; text-align: center; }
   .footer-legal { flex-wrap: wrap; justify-content: center; }
@@ -1343,7 +1845,7 @@ function buildDocsPages() {
   for (const cat of categoriesWithArticles) {
     const catDir = path.join(DOCS_OUT_DIR, cat.id);
     ensureDir(catDir);
-    fs.writeFileSync(path.join(catDir, "index.html"), generateDocsCategoryPage(cat), "utf-8");
+    fs.writeFileSync(path.join(catDir, "index.html"), generateDocsCategoryPage(cat, index), "utf-8");
     catCount++;
 
     for (let i = 0; i < cat.articles.length; i++) {
@@ -1361,7 +1863,7 @@ function buildDocsPages() {
 
       const artDir = path.join(catDir, art.slug);
       ensureDir(artDir);
-      fs.writeFileSync(path.join(artDir, "index.html"), generateDocsArticlePage(article, cat, allArticlesMap, prevNext), "utf-8");
+      fs.writeFileSync(path.join(artDir, "index.html"), generateDocsArticlePage(article, cat, allArticlesMap, prevNext, index), "utf-8");
       artCount++;
     }
   }
