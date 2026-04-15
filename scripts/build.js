@@ -2144,6 +2144,8 @@ function buildDocsPages() {
 
 function runHealthCheck({ docsStats, plansCount }) {
   const problems = [];
+  const MIN_CATEGORIES = 10;
+  const MIN_ARTICLES = 40;
 
   if (docsStats) {
     if (docsStats.generatedArticles !== docsStats.expectedArticles) {
@@ -2156,6 +2158,12 @@ function runHealthCheck({ docsStats, plansCount }) {
       problems.push(
         `Categorias: esperadas ${docsStats.expectedCategories}, geradas ${docsStats.generatedCategories}`
       );
+    }
+    if (docsStats.generatedCategories < MIN_CATEGORIES) {
+      problems.push(`Categorias: piso minimo ${MIN_CATEGORIES}, encontradas ${docsStats.generatedCategories} (sync provavelmente falhou)`);
+    }
+    if (docsStats.generatedArticles < MIN_ARTICLES) {
+      problems.push(`Artigos: piso minimo ${MIN_ARTICLES}, encontrados ${docsStats.generatedArticles} (sync provavelmente falhou)`);
     }
   }
 

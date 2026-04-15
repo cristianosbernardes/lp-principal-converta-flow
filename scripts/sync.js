@@ -253,13 +253,14 @@ async function syncDocs() {
   console.log("\n📚 Sincronizando artigos da Central de Ajuda...");
   ensureDir(DOCS_DATA_DIR);
 
-  try {
-    const result = USE_REMOTE ? await syncDocsRemote() : syncDocsLocal();
-    console.log(`  ✔ ${result.fetched}/${result.total} artigos sincronizados`);
-  } catch (err) {
-    console.error(`  ❌ Erro: ${err.message}`);
-    console.warn("  ⚠ Mantendo data/docs/ anterior (se existir).");
+  const result = USE_REMOTE ? await syncDocsRemote() : syncDocsLocal();
+  if (result.total === 0) {
+    throw new Error("Nenhuma categoria/artigo encontrado — sync de docs falhou silenciosamente.");
   }
+  if (result.fetched < result.total) {
+    throw new Error(`Sync incompleto: ${result.fetched}/${result.total} artigos baixados.`);
+  }
+  console.log(`  ✔ ${result.fetched}/${result.total} artigos sincronizados`);
 }
 
 // ══════════════════════════════════════════════
@@ -350,23 +351,51 @@ async function syncChangelog() {
 
 function parseHelpCategories(src) {
   // Extrai HELP_CATEGORIES via eval controlado (confia no proprio codigo do app).
-  // Captura o array literal depois de "export const HELP_CATEGORIES: HelpCategory[] = ["
+  // JS aceita nativamente comentarios //, trailing commas, single quotes e
+  // unquoted keys — que o JSON.parse rejeitava e quebrava o sync quando
+  // alguem adicionava comentario dentro do array (ex.: categoria oculta).
   const marker = "export const HELP_CATEGORIES: HelpCategory[] = [";
   const startIdx = src.indexOf(marker);
-  if (startIdx === -1) return [];
+  if (startIdx === -1) {
+    throw new Error(`Marker nao encontrado em help-data.ts: "${marker}"`);
+  }
 
   let i = startIdx + marker.length - 1; // aponta para o '['
   let depth = 0;
   let inString = false;
   let stringChar = "";
+  let inLineComment = false;
+  let inBlockComment = false;
   for (; i < src.length; i++) {
     const ch = src[i];
+    const next = src[i + 1];
+    if (inLineComment) {
+      if (ch === "\n") inLineComment = false;
+      continue;
+    }
+    if (inBlockComment) {
+      if (ch === "*" && next === "/") {
+        inBlockComment = false;
+        i++;
+      }
+      continue;
+    }
     if (inString) {
       if (ch === "\\") {
         i++;
         continue;
       }
       if (ch === stringChar) inString = false;
+      continue;
+    }
+    if (ch === "/" && next === "/") {
+      inLineComment = true;
+      i++;
+      continue;
+    }
+    if (ch === "/" && next === "*") {
+      inBlockComment = true;
+      i++;
       continue;
     }
     if (ch === '"' || ch === "'" || ch === "`") {
@@ -381,22 +410,20 @@ function parseHelpCategories(src) {
     }
   }
 
+  if (depth !== 0) {
+    throw new Error("Array literal de HELP_CATEGORIES mal-formado (colchetes desbalanceados)");
+  }
+
   const literal = src.slice(startIdx + marker.length - 1, i + 1);
 
-  // Converte objeto literal TS em JSON-compativel
-  // 1) Remove trailing commas antes de } ou ]
-  let jsonish = literal
-    .replace(/,(\s*[}\]])/g, "$1")
-    // 2) Quotes em keys nao-quoted (id: → "id":)
-    .replace(/([{,]\s*)([a-zA-Z_][a-zA-Z0-9_]*)\s*:/g, '$1"$2":')
-    // 3) Strings com aspas simples → duplas
-    .replace(/'([^'\\]*(?:\\.[^'\\]*)*)'/g, (m, p1) => JSON.stringify(p1));
-
   try {
-    return JSON.parse(jsonish);
+    const result = new Function(`return ${literal};`)();
+    if (!Array.isArray(result) || result.length === 0) {
+      throw new Error("HELP_CATEGORIES vazio ou nao-array");
+    }
+    return result;
   } catch (err) {
-    console.error("  [ERRO] Falha ao parsear HELP_CATEGORIES:", err.message);
-    return [];
+    throw new Error(`Falha ao parsear HELP_CATEGORIES: ${err.message}`);
   }
 }
 
