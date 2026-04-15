@@ -364,7 +364,7 @@ Estrutura sugerida para o convertaflow.com:
 ```
 /                              → index.html (já existe)
 /privacidade                   → privacidade.html (já existe)
-/termos                        → termos.html (já existe)
+/termos-e-servicos             → termos-e-servicos.html (/termos redireciona 301)
 /uso                           → uso.html (já existe)
 
 /docs                          → NOVO: índice de categorias (gerado pelo build)

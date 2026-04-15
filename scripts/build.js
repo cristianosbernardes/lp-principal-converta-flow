@@ -261,7 +261,7 @@ function updateIndexHtml(plans) {
  *
  * Usado em:
  *   - index.html (via marcador BUILD:FOOTER)
- *   - privacidade.html / termos.html / uso.html (via marcador BUILD:FOOTER)
+ *   - privacidade.html / termos-e-servicos.html / uso.html (via marcador BUILD:FOOTER)
  *   - paginas geradas de /docs/* (chamado direto em docsLayout)
  *
  * Links usam paths absolutos (/#secao, /docs, /uso) para funcionar em
@@ -341,7 +341,7 @@ function renderFooter() {
         <div class="footer-legal">
           <a href="/uso">Termos de Uso</a>
           <a href="/privacidade">Política de Privacidade</a>
-          <a href="/termos">Termos de Serviço</a>
+          <a href="/termos-e-servicos">Termos de Serviço</a>
         </div>
       </div>
     </div>
@@ -351,7 +351,7 @@ function renderFooter() {
 const STATIC_HTML_FILES = [
   path.join(LP_ROOT, "index.html"),
   path.join(LP_ROOT, "privacidade.html"),
-  path.join(LP_ROOT, "termos.html"),
+  path.join(LP_ROOT, "termos-e-servicos.html"),
   path.join(LP_ROOT, "uso.html"),
 ];
 

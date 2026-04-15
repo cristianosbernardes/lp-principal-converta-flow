@@ -5,6 +5,10 @@
   "framework": null,
   "cleanUrls": true,
   "trailingSlash": false,
+  "redirects": [
+    { "source": "/termos", "destination": "/termos-e-servicos", "permanent": true },
+    { "source": "/termos.html", "destination": "/termos-e-servicos", "permanent": true }
+  ],
   "headers": [
     {
       "source": "/(.*)",
