@@ -3059,6 +3059,433 @@
     });
   </script>
 
+  <!-- ══════════════════════════════════════════════════════════════════
+       COOKIE CONSENT — LGPD
+       Banner fixo + popup "Minhas opções" com 4 categorias.
+       Persiste em localStorage (cf_consent_v1).
+       Reabrir via window.CFConsent.open() ou link do footer.
+       ══════════════════════════════════════════════════════════════════ -->
+  <style>
+    .cfc-banner {
+      position: fixed; inset: auto 0 0 0; z-index: 9999;
+      background: #fff; border-top: 1px solid rgba(2,23,74,0.08);
+      box-shadow: 0 -8px 32px rgba(2,23,74,0.08);
+      padding: 14px 24px calc(14px + env(safe-area-inset-bottom, 0px));
+      font-family: var(--font-sans);
+      transform: translateY(100%);
+      transition: transform 320ms cubic-bezier(0.16,1,0.3,1);
+    }
+    .cfc-banner.cfc-is-visible { transform: translateY(0); }
+    .cfc-banner__inner {
+      max-width: 1200px; margin: 0 auto;
+      display: flex; align-items: center; gap: 24px; flex-wrap: wrap;
+    }
+    .cfc-banner__content { flex: 1 1 520px; min-width: 0; }
+    .cfc-banner__title {
+      margin: 0 0 4px 0; font-size: 15px; font-weight: 700;
+      color: var(--brand-navy); letter-spacing: -0.01em;
+    }
+    .cfc-banner__text {
+      margin: 0; font-size: 13.5px; line-height: 1.5; color: var(--text-secondary);
+    }
+    .cfc-banner__text a {
+      color: var(--brand-primary); text-decoration: underline;
+      text-underline-offset: 2px; font-weight: 500;
+    }
+    .cfc-banner__text a:hover { color: var(--brand-dark); }
+    .cfc-only-sm { display: none; }
+    @media (max-width: 768px) {
+      .cfc-hide-sm { display: none; }
+      .cfc-only-sm { display: inline; }
+    }
+    .cfc-banner__actions {
+      display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+    }
+    .cfc-btn {
+      appearance: none; border: none; background: none; font-family: inherit;
+      font-size: 14px; font-weight: 600; padding: 10px 20px;
+      border-radius: var(--radius-md); cursor: pointer;
+      transition: all var(--transition-base);
+      white-space: nowrap; letter-spacing: -0.005em;
+    }
+    .cfc-btn--ghost {
+      color: var(--text-secondary); padding: 10px 14px;
+      text-decoration: underline; text-underline-offset: 3px;
+    }
+    .cfc-btn--ghost:hover { color: var(--brand-navy); }
+    .cfc-btn--outline {
+      color: var(--text-primary); background: #fff; border: 1.5px solid #d6d8de;
+    }
+    .cfc-btn--outline:hover { border-color: var(--brand-primary); color: var(--brand-primary); }
+    .cfc-btn--primary {
+      color: #fff; background: var(--brand-primary);
+      box-shadow: 0 4px 14px rgba(30,127,212,0.28);
+    }
+    .cfc-btn--primary:hover {
+      background: var(--brand-dark); transform: translateY(-1px);
+      box-shadow: 0 6px 18px rgba(30,127,212,0.35);
+    }
+    .cfc-overlay {
+      position: fixed; inset: 0; background: rgba(13,27,62,0.35);
+      backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+      z-index: 10000; opacity: 0; pointer-events: none;
+      transition: opacity 200ms ease;
+    }
+    .cfc-overlay.cfc-is-open { opacity: 1; pointer-events: auto; }
+    .cfc-popup {
+      position: fixed; right: 20px; bottom: 20px;
+      width: min(360px, calc(100vw - 24px));
+      max-height: min(500px, calc(100vh - 40px));
+      background: var(--surface-card); border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-float), 0 0 0 1px rgba(2,23,74,0.06);
+      z-index: 10001; display: flex; flex-direction: column;
+      opacity: 0; pointer-events: none;
+      transform: translateY(16px) scale(0.98);
+      transition: opacity 220ms ease, transform 220ms cubic-bezier(0.16,1,0.3,1);
+      overflow: hidden; font-family: var(--font-sans);
+    }
+    .cfc-popup.cfc-is-open {
+      opacity: 1; pointer-events: auto; transform: translateY(0) scale(1);
+    }
+    .cfc-popup__header {
+      display: flex; align-items: center; justify-content: center;
+      padding: 12px 44px; border-bottom: 1px solid rgba(2,23,74,0.06);
+      position: relative;
+    }
+    .cfc-popup__title {
+      margin: 0; font-size: 13.5px; font-weight: 700;
+      color: var(--brand-navy); letter-spacing: -0.01em; text-align: center;
+    }
+    .cfc-popup__close {
+      position: absolute; right: 10px; top: 50%;
+      transform: translateY(-50%);
+      width: 24px; height: 24px; border-radius: 50%; border: none;
+      background: var(--brand-primary); color: #fff; cursor: pointer;
+      display: grid; place-items: center;
+      transition: background var(--transition-fast);
+    }
+    .cfc-popup__close:hover { background: var(--brand-dark); }
+    .cfc-popup__close svg { width: 10px; height: 10px; }
+    .cfc-popup__body {
+      overflow-y: auto; padding: 4px 16px; flex: 1 1 auto;
+    }
+    .cfc-popup__body::-webkit-scrollbar { width: 6px; }
+    .cfc-popup__body::-webkit-scrollbar-thumb {
+      background: rgba(2,23,74,0.2); border-radius: 3px;
+    }
+    .cfc-cat {
+      padding: 11px 0; border-bottom: 1px solid rgba(2,23,74,0.06);
+    }
+    .cfc-cat:last-child { border-bottom: none; }
+    .cfc-cat__head {
+      display: flex; align-items: center; gap: 7px; margin-bottom: 4px;
+    }
+    .cfc-cat__icon {
+      width: 15px; height: 15px; color: var(--brand-primary); flex-shrink: 0;
+    }
+    .cfc-cat__name {
+      flex: 1; font-size: 13px; font-weight: 600;
+      color: var(--brand-navy); letter-spacing: -0.005em;
+    }
+    .cfc-cat__desc {
+      margin: 0; font-size: 11.5px; line-height: 1.45; color: var(--text-secondary);
+    }
+    .cfc-cat__more {
+      display: inline-flex; align-items: center; gap: 4px;
+      margin-top: 4px; font-size: 11.5px; font-weight: 500;
+      color: var(--brand-primary); background: none; border: none;
+      padding: 2px 0; cursor: pointer; font-family: inherit;
+    }
+    .cfc-cat__more:hover { text-decoration: underline; }
+    .cfc-cat__more svg {
+      width: 10px; height: 10px; transition: transform var(--transition-fast);
+    }
+    .cfc-cat[data-expanded="true"] .cfc-cat__more svg { transform: rotate(90deg); }
+    .cfc-cat__details {
+      display: none; margin-top: 8px; padding: 10px 12px;
+      background: var(--surface-low); border-radius: var(--radius-sm);
+      font-size: 12px; line-height: 1.5; color: var(--text-secondary);
+    }
+    .cfc-cat[data-expanded="true"] .cfc-cat__details { display: block; }
+    .cfc-toggle {
+      position: relative; display: inline-block;
+      width: 34px; height: 19px; flex-shrink: 0;
+    }
+    .cfc-toggle input { opacity: 0; width: 0; height: 0; }
+    .cfc-toggle__slider {
+      position: absolute; inset: 0; background: #cbd0d9;
+      border-radius: 19px; cursor: pointer;
+      transition: background var(--transition-fast);
+    }
+    .cfc-toggle__slider::before {
+      content: ""; position: absolute;
+      height: 13px; width: 13px; left: 3px; top: 3px;
+      background: #fff; border-radius: 50%;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+      transition: transform var(--transition-fast);
+    }
+    .cfc-toggle input:checked + .cfc-toggle__slider { background: var(--brand-primary); }
+    .cfc-toggle input:checked + .cfc-toggle__slider::before { transform: translateX(15px); }
+    .cfc-toggle input:disabled + .cfc-toggle__slider {
+      background: var(--brand-accent); cursor: not-allowed; opacity: 0.8;
+    }
+    .cfc-popup__footer {
+      display: flex; gap: 8px; padding: 10px 16px 12px;
+      border-top: 1px solid rgba(2,23,74,0.06);
+      background: var(--surface-card);
+    }
+    .cfc-popup__footer .cfc-btn { flex: 1; padding: 9px 14px; font-size: 13px; }
+    @media (max-width: 768px) {
+      .cfc-banner {
+        padding: 10px 14px calc(10px + env(safe-area-inset-bottom, 0px));
+      }
+      .cfc-banner__inner { gap: 8px; }
+      .cfc-banner__content { flex: 1 1 100%; }
+      .cfc-banner__title { font-size: 13.5px; margin-bottom: 2px; }
+      .cfc-banner__text { font-size: 11.5px; line-height: 1.4; }
+      .cfc-banner__actions {
+        width: 100%; gap: 6px; flex-wrap: nowrap;
+      }
+      .cfc-banner__actions .cfc-btn {
+        font-size: 12.5px; padding: 8px 10px;
+      }
+      .cfc-banner__actions .cfc-btn--ghost {
+        flex: 0 0 auto; padding: 8px 6px; font-size: 12px;
+      }
+      .cfc-banner__actions .cfc-btn--outline,
+      .cfc-banner__actions .cfc-btn--primary { flex: 1 1 0; min-width: 0; }
+      .cfc-popup {
+        right: 12px; bottom: 12px;
+        width: calc(100vw - 24px);
+        max-width: 360px;
+        max-height: min(480px, calc(100vh - 24px));
+      }
+    }
+  </style>
+
+  <div class="cfc-banner" id="cfcBanner" role="region" aria-label="Controle de privacidade" hidden>
+    <div class="cfc-banner__inner">
+      <div class="cfc-banner__content">
+        <h3 class="cfc-banner__title">Controle sua privacidade</h3>
+        <p class="cfc-banner__text">
+          <span class="cfc-hide-sm">A ConvertaFlow utiliza cookies para melhorar sua experiência com nossos serviços. Para saber mais, acesse nossa </span><span class="cfc-only-sm">Usamos cookies. Veja </span><a href="/privacidade">Política de Privacidade</a> · <a href="/termos">Termos de uso</a>.
+        </p>
+      </div>
+      <div class="cfc-banner__actions">
+        <button type="button" class="cfc-btn cfc-btn--ghost" data-cfc-action="options">Minhas opções</button>
+        <button type="button" class="cfc-btn cfc-btn--outline" data-cfc-action="reject">Rejeitar</button>
+        <button type="button" class="cfc-btn cfc-btn--primary" data-cfc-action="accept">Aceitar</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="cfc-overlay" id="cfcOverlay" hidden></div>
+
+  <div class="cfc-popup" id="cfcPopup" role="dialog" aria-modal="true" aria-labelledby="cfcPopupTitle" hidden>
+    <div class="cfc-popup__header">
+      <h3 class="cfc-popup__title" id="cfcPopupTitle">Quem pode usar seus cookies?</h3>
+      <button type="button" class="cfc-popup__close" aria-label="Fechar" data-cfc-action="close">
+        <svg viewBox="0 0 12 12" fill="none" aria-hidden="true">
+          <path d="M1 1L11 11M11 1L1 11" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+    <div class="cfc-popup__body">
+      <div class="cfc-cat" data-expanded="false">
+        <div class="cfc-cat__head">
+          <svg class="cfc-cat__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M12 2L4 6v6c0 5 3.5 9.3 8 10 4.5-.7 8-5 8-10V6l-8-4z"/>
+            <path d="M9 12l2 2 4-4"/>
+          </svg>
+          <span class="cfc-cat__name">Necessários</span>
+          <label class="cfc-toggle">
+            <input type="checkbox" checked disabled aria-label="Necessários (sempre ativos)">
+            <span class="cfc-toggle__slider"></span>
+          </label>
+        </div>
+        <p class="cfc-cat__desc">Essenciais para o funcionamento do site. Sem eles a plataforma não opera corretamente (sessão, segurança, preferências básicas).</p>
+        <button type="button" class="cfc-cat__more" data-cfc-action="toggle-details">
+          Mostre mais
+          <svg viewBox="0 0 10 10" fill="none" aria-hidden="true"><path d="M3 1L7 5 3 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="cfc-cat__details">
+          Cookies de sessão, tokens CSRF, preferências de idioma e estado do banner de consentimento. Não podem ser desativados pois são requeridos para a operação do site.
+        </div>
+      </div>
+      <div class="cfc-cat" data-expanded="false">
+        <div class="cfc-cat__head">
+          <svg class="cfc-cat__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M3 11l18-8v18l-18-8z"/>
+            <path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/>
+          </svg>
+          <span class="cfc-cat__name">Marketing</span>
+          <label class="cfc-toggle">
+            <input type="checkbox" data-cfc-cat="marketing" checked aria-label="Marketing">
+            <span class="cfc-toggle__slider"></span>
+          </label>
+        </div>
+        <p class="cfc-cat__desc">Rastreiam a navegação para oferecer anúncios e comunicações mais relevantes conforme seu interesse.</p>
+        <button type="button" class="cfc-cat__more" data-cfc-action="toggle-details">
+          Mostre mais
+          <svg viewBox="0 0 10 10" fill="none" aria-hidden="true"><path d="M3 1L7 5 3 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="cfc-cat__details">
+          Pixels e tags de remarketing (Meta, Google Ads). Usados para mensurar campanhas e exibir conteúdo personalizado em outras plataformas.
+        </div>
+      </div>
+      <div class="cfc-cat" data-expanded="false">
+        <div class="cfc-cat__head">
+          <svg class="cfc-cat__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M3 3v18h18"/>
+            <path d="M7 15l4-4 3 3 5-6"/>
+          </svg>
+          <span class="cfc-cat__name">Estatísticas</span>
+          <label class="cfc-toggle">
+            <input type="checkbox" data-cfc-cat="analytics" checked aria-label="Estatísticas">
+            <span class="cfc-toggle__slider"></span>
+          </label>
+        </div>
+        <p class="cfc-cat__desc">Medem como visitantes interagem com o site de forma anônima, gerando relatórios agregados de comportamento.</p>
+        <button type="button" class="cfc-cat__more" data-cfc-action="toggle-details">
+          Mostre mais
+          <svg viewBox="0 0 10 10" fill="none" aria-hidden="true"><path d="M3 1L7 5 3 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="cfc-cat__details">
+          Google Analytics 4 e eventos de performance (tempos de carregamento, conversões). Nenhum dado pessoal direto é armazenado.
+        </div>
+      </div>
+      <div class="cfc-cat" data-expanded="false">
+        <div class="cfc-cat__head">
+          <svg class="cfc-cat__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+          </svg>
+          <span class="cfc-cat__name">Funcional</span>
+          <label class="cfc-toggle">
+            <input type="checkbox" data-cfc-cat="functional" checked aria-label="Funcional">
+            <span class="cfc-toggle__slider"></span>
+          </label>
+        </div>
+        <p class="cfc-cat__desc">Habilitam recursos extras como chat de atendimento, integrações com redes sociais e personalização de conteúdo.</p>
+        <button type="button" class="cfc-cat__more" data-cfc-action="toggle-details">
+          Mostre mais
+          <svg viewBox="0 0 10 10" fill="none" aria-hidden="true"><path d="M3 1L7 5 3 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="cfc-cat__details">
+          Widgets de chat, vídeos incorporados e compartilhamento social. Podem definir cookies próprios ao carregar.
+        </div>
+      </div>
+    </div>
+    <div class="cfc-popup__footer">
+      <button type="button" class="cfc-btn cfc-btn--outline" data-cfc-action="reject">Rejeitar</button>
+      <button type="button" class="cfc-btn cfc-btn--primary" data-cfc-action="save">Salvar opções</button>
+    </div>
+  </div>
+
+  <script>
+    (function(){
+      // Config do consentimento (padrão Google/Meta: por browser, nunca por IP)
+      // - CONSENT_VERSION: incrementar quando a Política de Privacidade mudar,
+      //   forcando re-solicitacao a todos os visitantes
+      // - CONSENT_MAX_AGE_DAYS: 180 dias (~6 meses) = mesmo prazo de Google/CNIL
+      const STORAGE_KEY = 'cf_consent';
+      const CONSENT_VERSION = 1;
+      const CONSENT_MAX_AGE_DAYS = 180;
+      const CONSENT_MAX_AGE_MS = CONSENT_MAX_AGE_DAYS * 24 * 60 * 60 * 1000;
+
+      const banner = document.getElementById('cfcBanner');
+      const popup = document.getElementById('cfcPopup');
+      const overlay = document.getElementById('cfcOverlay');
+      if (!banner || !popup || !overlay) return;
+
+      function loadConsent() {
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          if (!raw) return null;
+          const data = JSON.parse(raw);
+          if (!data || typeof data !== 'object') return null;
+          if (data.v !== CONSENT_VERSION) return null;        // política mudou
+          if (!data.ts || (Date.now() - data.ts) > CONSENT_MAX_AGE_MS) return null; // expirou
+          return data;
+        } catch(e) { return null; }
+      }
+      function saveConsent(data) {
+        const now = Date.now();
+        const payload = Object.assign({
+          necessary: true, marketing: false, analytics: false, functional: false,
+          ts: now,
+          v: CONSENT_VERSION,
+          expiresAt: now + CONSENT_MAX_AGE_MS
+        }, data);
+        try { localStorage.setItem(STORAGE_KEY, JSON.stringify(payload)); } catch(e) {}
+        window.dispatchEvent(new CustomEvent('cf:consent', { detail: payload }));
+        return payload;
+      }
+      function showBanner() {
+        banner.hidden = false;
+        requestAnimationFrame(() => banner.classList.add('cfc-is-visible'));
+      }
+      function hideBanner() {
+        banner.classList.remove('cfc-is-visible');
+        setTimeout(() => { banner.hidden = true; }, 320);
+      }
+      function openPopup() {
+        const c = loadConsent() || {};
+        popup.querySelectorAll('input[data-cfc-cat]').forEach(inp => {
+          const cat = inp.dataset.cfcCat;
+          inp.checked = c[cat] !== false;
+        });
+        overlay.hidden = false; popup.hidden = false;
+        requestAnimationFrame(() => {
+          overlay.classList.add('cfc-is-open');
+          popup.classList.add('cfc-is-open');
+        });
+      }
+      function closePopup() {
+        overlay.classList.remove('cfc-is-open');
+        popup.classList.remove('cfc-is-open');
+        setTimeout(() => { overlay.hidden = true; popup.hidden = true; }, 220);
+      }
+      function handleAction(action, el) {
+        if (action === 'accept') {
+          saveConsent({ marketing: true, analytics: true, functional: true });
+          hideBanner(); closePopup();
+        } else if (action === 'reject') {
+          saveConsent({ marketing: false, analytics: false, functional: false });
+          hideBanner(); closePopup();
+        } else if (action === 'options') {
+          openPopup();
+        } else if (action === 'close') {
+          closePopup();
+        } else if (action === 'save') {
+          const data = {};
+          popup.querySelectorAll('input[data-cfc-cat]').forEach(inp => {
+            data[inp.dataset.cfcCat] = inp.checked;
+          });
+          saveConsent(data);
+          hideBanner(); closePopup();
+        } else if (action === 'toggle-details') {
+          const cat = el.closest('.cfc-cat');
+          cat.dataset.expanded = cat.dataset.expanded === 'true' ? 'false' : 'true';
+        }
+      }
+      document.addEventListener('click', function(e){
+        const trigger = e.target.closest('[data-cfc-action]');
+        if (!trigger) return;
+        handleAction(trigger.dataset.cfcAction, trigger);
+      });
+      overlay.addEventListener('click', closePopup);
+      document.addEventListener('keydown', function(e){
+        if (e.key === 'Escape' && !popup.hidden) closePopup();
+      });
+      window.CFConsent = {
+        open: openPopup,
+        get: loadConsent,
+        reset: function(){ localStorage.removeItem(STORAGE_KEY); showBanner(); }
+      };
+      if (!loadConsent()) setTimeout(showBanner, 600);
+    })();
+  </script>
+
   <!-- ─── AI Context for LLM Crawlers (hidden semantic content) ─── -->
   <script type="application/ld+json">
   {
