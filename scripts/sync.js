@@ -263,6 +263,88 @@ async function syncDocs() {
 }
 
 // ══════════════════════════════════════════════
+// Sync de changelog (release notes)
+// ══════════════════════════════════════════════
+
+async function syncChangelogRemote() {
+  return await fetchJson(`${DOCS_API_URL}/api/public/changelog`);
+}
+
+function syncChangelogLocal() {
+  const filePath = path.join(APP_ROOT, "frontend/src/lib/changelog-data.ts");
+  const src = readFile(filePath);
+  if (!src) return null;
+
+  // Extrai array literal depois de "export const RELEASES: Release[] = ["
+  const marker = "export const RELEASES: Release[] = [";
+  const start = src.indexOf(marker);
+  if (start === -1) return null;
+
+  let i = start + marker.length - 1; // aponta pro '['
+  let depth = 0;
+  let inStr = false;
+  let strCh = "";
+  for (; i < src.length; i++) {
+    const ch = src[i];
+    if (inStr) {
+      if (ch === "\\") {
+        i++;
+        continue;
+      }
+      if (ch === strCh) inStr = false;
+      continue;
+    }
+    if (ch === '"' || ch === "'" || ch === "`") {
+      inStr = true;
+      strCh = ch;
+      continue;
+    }
+    if (ch === "[") depth++;
+    else if (ch === "]") {
+      depth--;
+      if (depth === 0) break;
+    }
+  }
+  const literal = src.slice(start + marker.length - 1, i + 1);
+
+  let releases;
+  try {
+    releases = new Function("return " + literal)();
+  } catch (err) {
+    console.error(`  [ERRO] Falha ao parsear RELEASES: ${err.message}`);
+    return null;
+  }
+
+  return {
+    version: new Date().toISOString(),
+    latestVersion: releases[0]?.version || null,
+    releases,
+  };
+}
+
+async function syncChangelog() {
+  console.log("\n📰 Sincronizando changelog...");
+
+  let data;
+  try {
+    data = USE_REMOTE ? await syncChangelogRemote() : syncChangelogLocal();
+  } catch (err) {
+    console.error(`  ❌ Erro ao buscar changelog: ${err.message}`);
+    console.warn("  ⚠ Mantendo changelog.json anterior (se existir).");
+    return;
+  }
+
+  if (!data || !Array.isArray(data.releases)) {
+    console.warn("  [WARN] changelog sem releases. Pulando.");
+    return;
+  }
+
+  const outPath = path.join(DATA_DIR, "changelog.json");
+  fs.writeFileSync(outPath, JSON.stringify(data, null, 2), "utf-8");
+  console.log(`  ✔ ${data.releases.length} release(s) salvas em data/changelog.json (latest: ${data.latestVersion || "?"})`);
+}
+
+// ══════════════════════════════════════════════
 // Parsers locais (filesystem mode)
 // ══════════════════════════════════════════════
 
@@ -537,6 +619,7 @@ async function main() {
   syncAuxiliaryDocs();
   await syncPlans();
   await syncDocs();
+  await syncChangelog();
 
   console.log("\n✅ Sync concluido!\n");
 }

@@ -21,6 +21,8 @@ const PLANS_FILE = path.join(LP_ROOT, "data", "plans.json");
 const DOCS_INDEX_FILE = path.join(LP_ROOT, "data", "docs", "index.json");
 const DOCS_DATA_DIR = path.join(LP_ROOT, "data", "docs");
 const DOCS_OUT_DIR = path.join(LP_ROOT, "docs");
+const CHANGELOG_FILE = path.join(LP_ROOT, "data", "changelog.json");
+const CHANGELOG_CATEGORY_ID = "changelog";
 
 // Slugs mostrados como "Artigos populares" na home da central.
 // Curadoria manual por ora — substituir por ranking automatico quando
@@ -50,6 +52,19 @@ const LUCIDE_ICON_BODIES = {
   ShieldAlertIcon: '<path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="M12 8v4"/><path d="M12 16h.01"/>',
   HeadphonesIcon: '<path d="M3 14h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H4a1 1 0 0 1-1-1zm18 0h-3a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h2a1 1 0 0 0 1-1z"/><path d="M21 14a9 9 0 0 0-18 0"/>',
   ScaleIcon: '<path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/>',
+  PlusIcon: '<path d="M5 12h14"/><path d="M12 5v14"/>',
+  TrendingUpIcon: '<polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/>',
+  WrenchIcon: '<path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>',
+  TrashIcon: '<path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>',
+};
+
+// Visual config para os tipos de mudanca do changelog.
+// Espelha frontend/src/app/(dashboard)/help/docs/changelog/page.tsx (TYPE_CONFIG).
+const CHANGELOG_TYPE_CONFIG = {
+  new:      { label: "Novo",      icon: "PlusIcon",        color: "#22c55e", bg: "#dcfce7" },
+  improved: { label: "Melhorado", icon: "TrendingUpIcon",  color: "#3b82f6", bg: "#dbeafe" },
+  fixed:    { label: "Corrigido", icon: "WrenchIcon",      color: "#f59e0b", bg: "#fef9c3" },
+  removed:  { label: "Removido",  icon: "TrashIcon",       color: "#ef4444", bg: "#fee2e2" },
 };
 
 function renderIcon(name, size = 24) {
@@ -449,14 +464,17 @@ function renderToc(headings) {
  * A categoria "atual" aparece expandida com seus artigos visiveis.
  */
 function renderDocsSidebar(index, current) {
-  const cats = index.categories.filter((c) => c.articles.length > 0);
+  const cats = index.categories.filter(
+    (c) => c.articles.length > 0 || c.id === CHANGELOG_CATEGORY_ID
+  );
   const currentCat = current ? current.categoryId : null;
   const currentSlug = current ? current.articleSlug : null;
 
   const groups = cats
     .map((cat) => {
+      const isChangelog = cat.id === CHANGELOG_CATEGORY_ID;
       const isActive = cat.id === currentCat;
-      const items = isActive
+      const items = !isChangelog && isActive
         ? `<div class="docs-sidebar-items">${cat.articles
             .map(
               (a) =>
@@ -464,12 +482,15 @@ function renderDocsSidebar(index, current) {
             )
             .join("")}</div>`
         : "";
+      const countBadge = isChangelog
+        ? ""
+        : `<span class="docs-sidebar-group-count">${cat.articles.length}</span>`;
       return `
         <div class="docs-sidebar-group ${isActive ? "is-active" : ""}">
           <a href="/docs/${cat.id}" class="docs-sidebar-group-title" style="--cat-color:${cat.color}">
             <span class="docs-sidebar-group-icon" style="color:${cat.color}">${renderIcon(cat.icon, 16)}</span>
             <span class="docs-sidebar-group-label">${escapeHtml(cat.title)}</span>
-            <span class="docs-sidebar-group-count">${cat.articles.length}</span>
+            ${countBadge}
           </a>
           ${items}
         </div>
@@ -651,7 +672,12 @@ function formatDatePtBR(isoDate) {
 // ── Index: lista de categorias ──
 
 function generateDocsIndexPage(index) {
-  const categoriesWithArticles = index.categories.filter((cat) => cat.articles.length > 0);
+  const displayedCategories = index.categories.filter(
+    (cat) => cat.articles.length > 0 || cat.id === CHANGELOG_CATEGORY_ID
+  );
+  const categoriesWithArticles = displayedCategories.filter(
+    (cat) => cat.id !== CHANGELOG_CATEGORY_ID
+  );
 
   // Mapa slug -> { article, category } para resolver populares e alimentar a busca
   const articleIndex = {};
@@ -661,17 +687,23 @@ function generateDocsIndexPage(index) {
     }
   }
 
-  const cards = categoriesWithArticles
-    .map((cat) => `
+  const cards = displayedCategories
+    .map((cat) => {
+      const isChangelog = cat.id === CHANGELOG_CATEGORY_ID;
+      const countLabel = isChangelog
+        ? "Versoes e novidades"
+        : `${cat.articles.length} artigo${cat.articles.length !== 1 ? "s" : ""}`;
+      return `
       <a href="/docs/${cat.id}" class="docs-cat-card" data-cat-id="${escapeHtml(cat.id)}" data-cat-title="${escapeHtml(cat.title)}" style="--cat-color: ${cat.color}">
         <div class="docs-cat-icon" style="background: ${cat.color}15; color: ${cat.color}">
           ${renderIcon(cat.icon, 24)}
         </div>
         <h3 class="docs-cat-title">${escapeHtml(cat.title)}</h3>
         <p class="docs-cat-desc">${escapeHtml(cat.description)}</p>
-        <div class="docs-cat-count">${cat.articles.length} artigo${cat.articles.length !== 1 ? "s" : ""}</div>
+        <div class="docs-cat-count">${countLabel}</div>
       </a>
-    `)
+    `;
+    })
     .join("");
 
   // Artigos populares (curadoria manual via FEATURED_SLUGS)
@@ -795,6 +827,92 @@ function generateDocsCategoryPage(category, index) {
     canonical: `https://convertaflow.com/docs/${category.id}`,
     bodyContent,
     sidebar: renderDocsSidebar(index, { categoryId: category.id }),
+    toc: null,
+    showHeaderSearch: true,
+    extraScripts: DOCS_ARTICLE_JS,
+  });
+}
+
+// ── Changelog: pagina especial de novidades/release notes ──
+
+function findChangelogCategory(index) {
+  return (
+    index.categories.find((c) => c.id === CHANGELOG_CATEGORY_ID) || {
+      id: CHANGELOG_CATEGORY_ID,
+      title: "Novidades e Atualizacoes",
+      description: "Veja o que ha de novo em cada versao do ConvertaFlow",
+      icon: "SparklesIcon",
+      color: "#7c3aed",
+      articles: [],
+    }
+  );
+}
+
+function renderChangelogRelease(release) {
+  const groups = (release.groups || [])
+    .map((group) => {
+      const cfg = CHANGELOG_TYPE_CONFIG[group.type] || CHANGELOG_TYPE_CONFIG.improved;
+      const items = (group.items || [])
+        .map(
+          (item) =>
+            `<li><span class="docs-changelog-bullet" style="background:${cfg.color}" aria-hidden="true"></span><span>${escapeHtml(item.text)}</span></li>`
+        )
+        .join("");
+      return `
+        <div class="docs-changelog-group">
+          <span class="docs-changelog-group-label" style="background:${cfg.bg};color:${cfg.color}">
+            ${renderIcon(cfg.icon, 12)}
+            ${cfg.label}
+          </span>
+          <ul class="docs-changelog-items">${items}</ul>
+        </div>
+      `;
+    })
+    .join("");
+
+  return `
+    <article class="docs-changelog-release">
+      <header class="docs-changelog-release-header">
+        <div class="docs-changelog-release-meta">
+          <span class="docs-changelog-version">v${escapeHtml(release.version || "")}</span>
+          ${release.title ? `<span class="docs-changelog-title">${escapeHtml(release.title)}</span>` : ""}
+        </div>
+        ${release.date ? `<span class="docs-changelog-date">${escapeHtml(release.date)}</span>` : ""}
+      </header>
+      <div class="docs-changelog-groups">${groups}</div>
+    </article>
+  `;
+}
+
+function generateChangelogPage(changelog, index) {
+  const category = findChangelogCategory(index);
+  const releases = Array.isArray(changelog.releases) ? changelog.releases : [];
+
+  const bodyContent = `
+    <nav class="docs-breadcrumb-inline" aria-label="Você está em">
+      <a href="/docs">Central de Ajuda</a>
+      <span class="docs-breadcrumb-sep" aria-hidden="true">/</span>
+      <span class="docs-breadcrumb-current">${escapeHtml(category.title)}</span>
+    </nav>
+    <header class="docs-page-header">
+      <div class="docs-hero-eyebrow docs-changelog-eyebrow" style="color: ${category.color}">
+        <span class="docs-changelog-eyebrow-icon" style="color: ${category.color}">${renderIcon(category.icon, 12)}</span>
+        Versoes da plataforma
+      </div>
+      <h1>${escapeHtml(category.title)}</h1>
+      <p class="docs-page-desc">Acompanhe tudo que evolui no ConvertaFlow a cada versao.</p>
+    </header>
+    <div class="docs-changelog-list">
+      ${releases.map(renderChangelogRelease).join("")}
+    </div>
+  `;
+
+  return docsLayout({
+    title: category.title,
+    description: category.description,
+    canonical: "https://convertaflow.com/docs/changelog",
+    bodyContent,
+    sidebar: renderDocsSidebar(index, { categoryId: CHANGELOG_CATEGORY_ID }),
     toc: null,
     showHeaderSearch: true,
     extraScripts: DOCS_ARTICLE_JS,
@@ -1701,6 +1819,105 @@ h1, h2, h3, h4, h5, h6 { color: var(--text-primary); font-weight: 700; line-heig
 .docs-article-body tr:last-child td { border-bottom: none; }
 .docs-article-body tr:nth-child(even) { background: var(--surface-low); }
 
+/* ─── Changelog (novidades e atualizacoes) ─── */
+.docs-changelog-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.docs-changelog-eyebrow-icon { display: inline-flex; }
+.docs-changelog-eyebrow-icon svg { display: block; }
+.docs-changelog-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 760px;
+  margin: 0 auto;
+}
+.docs-changelog-release {
+  background: var(--surface-card);
+  border: 1px solid var(--surface-high);
+  border-radius: var(--radius-xl);
+  padding: 20px;
+  box-shadow: var(--shadow-sm);
+}
+.docs-changelog-release-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.docs-changelog-release-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.docs-changelog-version {
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+  background: var(--surface-container);
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  letter-spacing: -0.01em;
+}
+.docs-changelog-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+.docs-changelog-date {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+.docs-changelog-groups {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.docs-changelog-group-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 999px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 8px;
+}
+.docs-changelog-group-label svg { display: block; }
+.docs-changelog-items {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 0 2px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.docs-changelog-items li {
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--text-secondary);
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+.docs-changelog-bullet {
+  flex-shrink: 0;
+  margin-top: 8px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  opacity: 0.55;
+}
+
 /* ─── Prev/Next ─── */
 .docs-article-footer { margin-top: 48px; padding-top: 32px; border-top: 1px solid var(--surface-high); }
 .docs-prev-next-wrapper {
@@ -1823,7 +2040,21 @@ function buildDocsPages() {
   }
 
   const index = JSON.parse(fs.readFileSync(DOCS_INDEX_FILE, "utf-8"));
-  const categoriesWithArticles = index.categories.filter((c) => c.articles.length > 0);
+  // Garante que a categoria "changelog" exista no indice — ela aparece na
+  // sidebar/home mesmo sem artigos. A API ja retorna, mas protege fallback local.
+  if (!index.categories.some((c) => c.id === CHANGELOG_CATEGORY_ID)) {
+    index.categories.push({
+      id: CHANGELOG_CATEGORY_ID,
+      title: "Novidades e Atualizacoes",
+      description: "Veja o que ha de novo em cada versao do ConvertaFlow",
+      icon: "SparklesIcon",
+      color: "#7c3aed",
+      articles: [],
+    });
+  }
+  const categoriesWithArticles = index.categories.filter(
+    (c) => c.articles.length > 0 && c.id !== CHANGELOG_CATEGORY_ID
+  );
 
   // Mapa slug → { categoryId } para resolver doc:slug
   const allArticlesMap = {};
@@ -1878,6 +2109,28 @@ function buildDocsPages() {
   console.log(`  ✔ ${catCount} categoria(s) + ${artCount} artigo(s) gerados em /docs`);
   if (skipCount > 0) console.log(`  ⚠ ${skipCount} artigo(s) pulado(s) (sem data/docs/{slug}.json)`);
 
+  // Pagina especial /docs/changelog
+  let changelogGenerated = false;
+  if (fs.existsSync(CHANGELOG_FILE)) {
+    try {
+      const changelog = JSON.parse(fs.readFileSync(CHANGELOG_FILE, "utf-8"));
+      const changelogDir = path.join(DOCS_OUT_DIR, CHANGELOG_CATEGORY_ID);
+      ensureDir(changelogDir);
+      fs.writeFileSync(
+        path.join(changelogDir, "index.html"),
+        generateChangelogPage(changelog, index),
+        "utf-8"
+      );
+      const releases = Array.isArray(changelog.releases) ? changelog.releases.length : 0;
+      console.log(`  ✔ /docs/changelog gerado (${releases} release${releases !== 1 ? "s" : ""})`);
+      changelogGenerated = true;
+    } catch (err) {
+      console.error(`  ❌ Falha ao gerar /docs/changelog: ${err.message}`);
+    }
+  } else {
+    console.warn("  [WARN] data/changelog.json nao encontrado. Pulando /docs/changelog.");
+  }
+
   const expectedArticles = categoriesWithArticles.reduce((n, c) => n + c.articles.length, 0);
   return {
     expectedCategories: categoriesWithArticles.length,
@@ -1885,6 +2138,7 @@ function buildDocsPages() {
     expectedArticles,
     generatedArticles: artCount,
     skippedArticles: skipCount,
+    changelogGenerated,
   };
 }
 
