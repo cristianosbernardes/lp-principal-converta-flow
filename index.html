@@ -320,6 +320,7 @@
       scroll-behavior: smooth;
       -webkit-text-size-adjust: 100%;
       font-size: 16px;
+      background: #0a0f1e;
     }
 
     body {
@@ -520,6 +521,15 @@
 
     .navbar.scrolled {
       box-shadow: 0 1px 12px rgba(2, 23, 74, 0.06);
+    }
+
+    .navbar {
+      transition: transform 240ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 200ms ease;
+      will-change: transform;
+    }
+
+    .navbar.is-hidden {
+      transform: translateY(-100%);
     }
 
     .navbar-inner {
@@ -1841,7 +1851,9 @@
       .section { padding: 72px 0; }
 
       .navbar-links { display: none; }
+      .navbar-login { display: none; }
       .mobile-toggle { display: block; }
+      .navbar-actions { gap: 8px; }
 
       .hero-inner { padding: 60px 24px 100px; }
 
@@ -1892,6 +1904,11 @@
     @media (max-width: 767px) {
       .section { padding: 56px 0; }
       .container, .container-wide { padding: 0 16px; }
+
+      .navbar-inner { padding: 0 16px; gap: 8px; }
+      .navbar-brand-sub { display: none; }
+      .navbar-actions .btn-sm { padding: 8px 14px; font-size: 13px; }
+      .mobile-toggle { padding: 6px; }
 
       .hero h1 { font-size: 32px; }
       .hero-description { font-size: 16px; }
@@ -2845,18 +2862,47 @@
        JAVASCRIPT
        ════════════════════════════════════════════════════════════════ -->
   <script>
-    // ─── Navbar scroll effect ───
+    // ─── Navbar scroll effect + auto-hide on mobile ───
     const navbar = document.querySelector('.navbar');
+    const mobileQuery = window.matchMedia('(max-width: 991px)');
     let lastScroll = 0;
+    let ticking = false;
+    const HIDE_THRESHOLD = 80;
+    const SCROLL_DELTA = 8;
 
-    window.addEventListener('scroll', () => {
+    function updateNavbar() {
       const scrollTop = window.scrollY;
+
       if (scrollTop > 20) {
         navbar.classList.add('scrolled');
       } else {
         navbar.classList.remove('scrolled');
       }
+
+      // Auto-hide so em mobile/tablet e com menu fechado
+      const menuOpen = document.getElementById('mobileMenu')?.classList.contains('active');
+      if (mobileQuery.matches && !menuOpen) {
+        const diff = scrollTop - lastScroll;
+        if (scrollTop < HIDE_THRESHOLD) {
+          navbar.classList.remove('is-hidden');
+        } else if (diff > SCROLL_DELTA) {
+          navbar.classList.add('is-hidden');
+        } else if (diff < -SCROLL_DELTA) {
+          navbar.classList.remove('is-hidden');
+        }
+      } else {
+        navbar.classList.remove('is-hidden');
+      }
+
       lastScroll = scrollTop;
+      ticking = false;
+    }
+
+    window.addEventListener('scroll', () => {
+      if (!ticking) {
+        requestAnimationFrame(updateNavbar);
+        ticking = true;
+      }
     }, { passive: true });
 
     // ─── Mobile Menu ───

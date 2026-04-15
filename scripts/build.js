@@ -1160,7 +1160,7 @@ const DOCS_CSS = `/* ConvertaFlow — Docs styles (gerado por build.js) */
   --font-mono: 'Geist Mono', 'SF Mono', monospace;
 }
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; font-size: 16px; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; font-size: 16px; background: #0a0f1e; }
 body {
   font-family: var(--font-sans);
   color: var(--text-secondary);
