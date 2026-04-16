@@ -150,9 +150,9 @@ function getPlanFeatures(plan) {
 function getPlanMeta(plan) {
   const badgeMap = {
     essencial: null,
-    profissional: { class: "pricing-badge--popular", text: "Popular" },
+    profissional: null,
     business: { class: "pricing-badge--best", text: "Mais vendido" },
-    enterprise: { class: "pricing-badge--enterprise", text: "Enterprise" },
+    enterprise: null,
   };
   const ctaMap = {
     essencial: { class: "btn btn-outline pricing-cta", text: "Começar 7 dias grátis" },
@@ -167,7 +167,9 @@ function getPlanMeta(plan) {
     enterprise: "Tudo do Business, mais",
   };
   return {
-    badge: badgeMap[plan.slug] || (plan.badge ? { class: "pricing-badge--popular", text: plan.badge } : null),
+    badge: plan.slug in badgeMap
+      ? badgeMap[plan.slug]
+      : (plan.badge ? { class: "pricing-badge--popular", text: plan.badge } : null),
     cta: ctaMap[plan.slug] || ctaMap.profissional,
     featTitle: featTitleMap[plan.slug] || "Recursos",
     isFeatured: plan.slug === "business",
