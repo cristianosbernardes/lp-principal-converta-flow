@@ -21,7 +21,14 @@ docs-styles.css
 
 .vercel
 
-# ─── Screenshots de auditoria (temporarios) ───
+# ─── Screenshots de auditoria e testes visuais (temporarios) ───
 audit-*.png
 final-*.png
 full-page-*.png
+hero-*.png
+pricing-*.png
+transition-*.png
+marquee-*.png
+cta-*.png
+faq-*.png
+cfc-*.png
