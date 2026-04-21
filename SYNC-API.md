@@ -362,10 +362,10 @@ function resolveDocLinks(markdown, allArticles) {
 Estrutura sugerida para o convertaflow.com:
 
 ```
-/                              → index.html (já existe)
-/privacidade                   → privacidade.html (já existe)
-/termos-e-servicos             → termos-e-servicos.html (/termos redireciona 301)
-/uso                           → uso.html (já existe)
+/                              → index.html
+/privacy-policy                → privacy-policy.html (/privacidade redireciona 301)
+/terms-of-service              → terms-of-service.html (/termos e /termos-e-servicos redirecionam 301)
+/terms-of-use                  → terms-of-use.html (/uso redireciona 301)
 
 /docs                          → NOVO: índice de categorias (gerado pelo build)
 /docs/{categoria}              → NOVO: lista de artigos da categoria

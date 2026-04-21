@@ -263,10 +263,10 @@ function updateIndexHtml(plans) {
  *
  * Usado em:
  *   - index.html (via marcador BUILD:FOOTER)
- *   - privacidade.html / termos-e-servicos.html / uso.html (via marcador BUILD:FOOTER)
+ *   - privacy-policy.html / terms-of-service.html / terms-of-use.html (via marcador BUILD:FOOTER)
  *   - paginas geradas de /docs/* (chamado direto em docsLayout)
  *
- * Links usam paths absolutos (/#secao, /docs, /uso) para funcionar em
+ * Links usam paths absolutos (/#secao, /docs, /terms-of-use) para funcionar em
  * qualquer pagina de origem (home, docs, legais).
  */
 function renderFooter() {
@@ -341,9 +341,9 @@ function renderFooter() {
           &copy; 2024–2026 ConvertaFlow. Todos os direitos reservados.
         </div>
         <div class="footer-legal">
-          <a href="/uso">Termos de Uso</a>
-          <a href="/privacidade">Política de Privacidade</a>
-          <a href="/termos-e-servicos">Termos de Serviço</a>
+          <a href="/terms-of-use">Termos de Uso</a>
+          <a href="/privacy-policy">Política de Privacidade</a>
+          <a href="/terms-of-service">Termos de Serviço</a>
         </div>
       </div>
     </div>
@@ -352,9 +352,9 @@ function renderFooter() {
 
 const STATIC_HTML_FILES = [
   path.join(LP_ROOT, "index.html"),
-  path.join(LP_ROOT, "privacidade.html"),
-  path.join(LP_ROOT, "termos-e-servicos.html"),
-  path.join(LP_ROOT, "uso.html"),
+  path.join(LP_ROOT, "privacy-policy.html"),
+  path.join(LP_ROOT, "terms-of-service.html"),
+  path.join(LP_ROOT, "terms-of-use.html"),
 ];
 
 /**

@@ -6,8 +6,14 @@
   "cleanUrls": true,
   "trailingSlash": false,
   "redirects": [
-    { "source": "/termos", "destination": "/termos-e-servicos", "permanent": true },
-    { "source": "/termos.html", "destination": "/termos-e-servicos", "permanent": true }
+    { "source": "/uso", "destination": "/terms-of-use", "permanent": true },
+    { "source": "/uso.html", "destination": "/terms-of-use", "permanent": true },
+    { "source": "/privacidade", "destination": "/privacy-policy", "permanent": true },
+    { "source": "/privacidade.html", "destination": "/privacy-policy", "permanent": true },
+    { "source": "/termos", "destination": "/terms-of-service", "permanent": true },
+    { "source": "/termos.html", "destination": "/terms-of-service", "permanent": true },
+    { "source": "/termos-e-servicos", "destination": "/terms-of-service", "permanent": true },
+    { "source": "/termos-e-servicos.html", "destination": "/terms-of-service", "permanent": true }
   ],
   "headers": [
     {
