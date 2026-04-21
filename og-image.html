@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<title>OG image render — 1200x630 (fonte para og-image.png)</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/geist@1.3.0/dist/font/sans.css">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { background: #0b1a33; }
+  body {
+    width: 1200px; height: 630px;
+    font-family: "Geist", system-ui, -apple-system, "Segoe UI", sans-serif;
+    color: #fff;
+    position: relative;
+    overflow: hidden;
+    background:
+      radial-gradient(ellipse 900px 500px at 85% 15%, rgba(252,158,28,0.18), transparent 60%),
+      radial-gradient(ellipse 1100px 700px at 10% 95%, rgba(30,127,212,0.45), transparent 65%),
+      linear-gradient(135deg, #1E7FD4 0%, #1A3A6E 60%, #0f2347 100%);
+  }
+
+  .grain {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+    background-size: 48px 48px;
+    mask-image: radial-gradient(ellipse 800px 500px at 30% 70%, #000 30%, transparent 75%);
+  }
+
+  .beam {
+    position: absolute;
+    top: -50px; right: -120px;
+    width: 520px; height: 780px;
+    background: linear-gradient(135deg, rgba(252,158,28,0.22), transparent 70%);
+    filter: blur(40px);
+    transform: rotate(18deg);
+  }
+
+  .wrap {
+    position: relative;
+    height: 100%;
+    padding: 80px 90px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .top { display: flex; align-items: center; gap: 22px; }
+  .logo-box {
+    width: 80px; height: 80px;
+    border-radius: 20px;
+    background: linear-gradient(135deg, #1E7FD4, #1A3A6E);
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 18px 40px rgba(10,30,60,0.45), inset 0 1px 0 rgba(255,255,255,0.18);
+  }
+  .logo-box svg { width: 62px; height: 62px; display: block; }
+  .brand-name {
+    font-size: 44px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1;
+  }
+  .brand-sub {
+    font-size: 17px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.72);
+    margin-top: 6px;
+  }
+
+  .mid { margin-top: 40px; }
+  .headline {
+    font-size: 88px;
+    font-weight: 700;
+    letter-spacing: -0.035em;
+    line-height: 1.02;
+    max-width: 940px;
+  }
+  .headline .accent {
+    background: linear-gradient(90deg, #FFB84C, #FC9E1C);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .sub {
+    margin-top: 28px;
+    font-size: 30px;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    line-height: 1.35;
+    color: rgba(255,255,255,0.82);
+    max-width: 960px;
+  }
+
+  .bot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .pills { display: flex; gap: 12px; flex-wrap: wrap; }
+  .pill {
+    padding: 10px 18px;
+    border: 1px solid rgba(255,255,255,0.22);
+    border-radius: 999px;
+    background: rgba(255,255,255,0.06);
+    font-size: 18px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.92);
+    backdrop-filter: blur(6px);
+  }
+  .url {
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: rgba(255,255,255,0.92);
+  }
+</style>
+</head>
+<body>
+  <div class="grain"></div>
+  <div class="beam"></div>
+
+  <div class="wrap">
+    <div class="top">
+      <div class="logo-box">
+        <svg viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M246.674 303.845C220.063 319.208 186.036 310.091 170.672 283.48C155.308 256.869 164.426 222.842 191.037 207.478C210.689 196.132 231.386 195.138 248.624 207.681C255.117 210.259 274.294 216.699 300.764 201.462C326.219 186.722 330.879 167.788 332.094 160.234C329.551 138.81 342.667 119.934 362.536 108.463C389.147 93.0996 423.174 102.217 438.537 128.828C453.901 155.439 444.784 189.466 418.173 204.83C399.878 215.392 376.85 218.518 360.019 208.209C352.87 205.485 338.142 200.054 312.65 214.728C286.219 230.033 282.208 245.861 281.194 252.773C281.182 256.5 281.182 254.798 281.182 258.568C282.208 265.279 286.219 280.107 312.65 295.412C338.142 310.086 352.87 304.655 360.019 301.931C376.85 291.622 399.878 295.748 418.173 306.31C444.784 321.674 453.901 355.701 438.537 382.312C423.174 408.923 389.147 418.041 362.536 402.677C342.667 391.206 329.551 371.33 332.094 349.906C330.879 342.352 326.219 323.418 300.764 308.678C274.294 293.441 255.117 299.881 248.624 302.459C247.186 303.686 248.47 302.808 246.674 303.845Z" fill="#FC9E1C"/>
+          <path d="M66 255.57C66 338.899 133.551 406.45 216.88 406.45C240.375 406.45 262.614 401.081 282.44 391.501C285.85 389.853 289.188 388.081 292.45 386.189C292.842 385.962 293.234 385.733 293.624 385.502C301.176 379.36 305 369.993 305 359.5C305 340.998 290.002 326 271.5 326C268.325 326 266.254 326.442 263.344 327.267C259.353 329.867 255.13 332.142 250.712 334.052C240.376 338.523 227.977 342 216 342C169.056 342 130 302.944 130 256C130 209.056 169.056 170 216 170C229.309 170 242.904 174.059 254.12 179.512C255.979 180.416 257.8 181.385 259.58 182.418C263.556 184.081 267.92 184 272.5 184C291.002 184 306 169.002 306 150.5C306 140.282 301.425 132.133 294.213 125.988C293.628 125.638 293.04 125.292 292.45 124.95C288.944 122.918 285.349 121.022 281.672 119.271C262.041 109.922 240.072 104.689 216.88 104.689C133.551 104.689 66 172.241 66 255.57Z" fill="white"/>
+        </svg>
+      </div>
+      <div>
+        <div class="brand-name">ConvertaFlow</div>
+        <div class="brand-sub">Omnichannel + IA</div>
+      </div>
+    </div>
+
+    <div class="mid">
+      <div class="headline">A plataforma que transforma <span class="accent">conversas em conversões.</span></div>
+      <div class="sub">WhatsApp, Instagram, Facebook, Telegram, Chat e E-mail em uma única tela — com IA integrada.</div>
+    </div>
+
+    <div class="bot">
+      <div class="pills">
+        <div class="pill">7 canais</div>
+        <div class="pill">Lia IA</div>
+        <div class="pill">Automação</div>
+        <div class="pill">CRM + VoIP</div>
+      </div>
+      <div class="url">convertaflow.com</div>
+    </div>
+  </div>
+</body>
+</html>
