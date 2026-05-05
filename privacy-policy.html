@@ -449,7 +449,7 @@
   <!-- Content -->
   <main class="legal-content">
     <h1>Política de Privacidade</h1>
-    <p class="legal-update"><strong>Última atualização:</strong> 07 de abril de 2026</p>
+    <p class="legal-update"><strong>Última atualização:</strong> 05 de maio de 2026</p>
 
     <hr>
 
@@ -614,6 +614,86 @@
 
     <h3>6.4. Compartilhamento por Obrigação Legal</h3>
     <p>Podemos compartilhar dados quando exigido por lei, ordem judicial, ou requisição de autoridade competente, incluindo a ANPD (Autoridade Nacional de Proteção de Dados).</p>
+
+    <h3>6.5. Integrações com Plataformas Externas via OAuth</h3>
+    <p>A ConvertaFlow oferece integrações opcionais com plataformas externas (Google Ads, Meta Ads, Google Calendar, Instagram Business, WhatsApp Business e outras). Essas integrações <strong>são ativadas exclusivamente quando o Usuário autoriza explicitamente</strong> o acesso, via fluxo OAuth 2.0 padrão das respectivas plataformas.</p>
+
+    <h4>6.5.1. Como funciona o acesso autorizado</h4>
+    <ol>
+      <li>O Usuário inicia a integração dentro da Plataforma e é redirecionado para a tela de consentimento da plataforma externa (ex.: Google ou Meta)</li>
+      <li>A plataforma externa lista os escopos solicitados pela ConvertaFlow e pede o consentimento explícito do Usuário</li>
+      <li>Apenas após o consentimento, a plataforma externa emite um token de acesso para a ConvertaFlow</li>
+      <li>O token é armazenado de forma criptografada e <strong>vinculado exclusivamente à Organização do Usuário</strong> (multi-tenant isolado)</li>
+      <li>A ConvertaFlow nunca acessa dados das plataformas externas sem um token válido emitido pelo próprio Usuário</li>
+    </ol>
+
+    <h4>6.5.2. Escopos solicitados e finalidade de uso</h4>
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Plataforma</th>
+            <th>Escopo</th>
+            <th>Finalidade</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Google Ads API</strong></td>
+            <td><code>https://www.googleapis.com/auth/adwords</code></td>
+            <td>Ler métricas de campanhas (impressões, cliques, conversões, custo) e exibir dashboards de Unit Economics (CAC, LTV, ROI, ROAS) na Plataforma</td>
+          </tr>
+          <tr>
+            <td><strong>Google Calendar API</strong></td>
+            <td><code>https://www.googleapis.com/auth/calendar</code></td>
+            <td>Sincronizar bidirecionalmente compromissos da Agenda do Usuário com sua Conta Google</td>
+          </tr>
+          <tr>
+            <td><strong>Meta Marketing API</strong></td>
+            <td><code>ads_read</code>, <code>ads_management</code>, <code>business_management</code></td>
+            <td>Ler dados de campanhas Meta Ads (Facebook/Instagram) para dashboards de Unit Economics</td>
+          </tr>
+          <tr>
+            <td><strong>Meta Messaging API</strong></td>
+            <td><code>whatsapp_business_messaging</code>, <code>instagram_basic</code>, <code>pages_messaging</code></td>
+            <td>Receber e enviar mensagens em nome do Usuário nos canais que ele autorizar</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h4>6.5.3. Conformidade com as Políticas das Plataformas</h4>
+    <p>O uso e a transferência das informações recebidas das <strong>APIs do Google</strong> pela ConvertaFlow obedecem à <a href="https://developers.google.com/terms/api-services-user-data-policy" target="_blank" rel="noopener noreferrer">Google API Services User Data Policy</a>, incluindo os requisitos de <strong>Limited Use</strong>. Em particular:</p>
+    <ul>
+      <li><strong>Não usamos</strong> dados obtidos via APIs do Google para servir anúncios (nem em nossa Plataforma, nem em qualquer outra)</li>
+      <li><strong>Não vendemos</strong> dados obtidos via APIs do Google a terceiros</li>
+      <li><strong>Não compartilhamos</strong> dados obtidos via APIs do Google com terceiros, exceto quando estritamente necessário para a operação do serviço solicitado pelo Usuário, e sempre sob acordo de confidencialidade</li>
+      <li><strong>Não usamos</strong> dados obtidos via APIs do Google para finalidades não relacionadas ao recurso ou serviço solicitado pelo Usuário</li>
+      <li><strong>Nenhum ser humano</strong> lê dados obtidos via APIs do Google, exceto: (a) com o consentimento explícito do Usuário, (b) por motivo de segurança (ex.: investigação de abuso), (c) para cumprir obrigação legal, (d) para finalidades internas de operação agregada e anonimizada</li>
+    </ul>
+    <p>Para integrações com a <strong>Meta</strong> (Facebook, Instagram, WhatsApp), o uso obedece às <a href="https://developers.facebook.com/terms/" target="_blank" rel="noopener noreferrer">Meta Platform Terms</a> e à <a href="https://developers.facebook.com/devpolicy/" target="_blank" rel="noopener noreferrer">Política de Dados de Plataforma da Meta</a>, incluindo as restrições aplicáveis a cada permissão concedida.</p>
+
+    <h4>6.5.4. Armazenamento e retenção dos dados de integrações</h4>
+    <p>Os dados obtidos via integrações OAuth são armazenados <strong>apenas o tempo necessário para a finalidade declarada</strong>. Em particular:</p>
+    <ul>
+      <li><strong>Tokens de acesso e refresh tokens</strong> ficam criptografados em repouso e são utilizados exclusivamente para chamadas autorizadas às respectivas APIs</li>
+      <li><strong>Dados de campanhas</strong> (Google Ads, Meta Ads) são armazenados em formato agregado para alimentar os dashboards do Usuário e ficam isolados na Organização do Usuário</li>
+      <li><strong>Dados sensíveis</strong> nunca são logados em sistemas externos de monitoramento (ex.: Sentry recebe apenas IDs anônimos, nunca conteúdo)</li>
+    </ul>
+
+    <h4>6.5.5. Como o Usuário pode revogar o acesso</h4>
+    <p>O Usuário pode revogar o acesso da ConvertaFlow a qualquer plataforma externa a qualquer momento, por qualquer um dos seguintes meios:</p>
+    <ol>
+      <li><strong>Dentro da própria Plataforma</strong>: acessando <em>Configurações → Integrações</em> e clicando em "Desconectar" na integração desejada. A revogação remove o token armazenado pela ConvertaFlow imediatamente</li>
+      <li><strong>Diretamente na plataforma externa</strong>:
+        <ul>
+          <li><strong>Google</strong>: <a href="https://myaccount.google.com/permissions" target="_blank" rel="noopener noreferrer">myaccount.google.com/permissions</a> — basta encontrar "ConvertaFlow" e clicar em "Remover acesso"</li>
+          <li><strong>Meta (Facebook/Instagram)</strong>: <em>Configurações → Aplicativos e sites → Removidos</em></li>
+        </ul>
+      </li>
+      <li><strong>Por solicitação ao DPO</strong>: enviando e-mail para <a href="mailto:dpo@convertaflow.com">dpo@convertaflow.com</a> com a solicitação de desvinculação</li>
+    </ol>
+    <p>Após a revogação, a ConvertaFlow <strong>deixa imediatamente de fazer chamadas</strong> à plataforma externa em nome do Usuário e os dados em cache que dependem da integração são removidos no próximo ciclo de sincronização (em até 24 horas).</p>
 
     <hr>
 
