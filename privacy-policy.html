@@ -678,13 +678,17 @@
     </ol>
     <p>Para integrações com a <strong>Meta</strong> (Facebook, Instagram, WhatsApp), o uso obedece às <a href="https://developers.facebook.com/terms/" target="_blank" rel="noopener noreferrer">Meta Platform Terms</a> e à <a href="https://developers.facebook.com/devpolicy/" target="_blank" rel="noopener noreferrer">Política de Dados de Plataforma da Meta</a>, incluindo as restrições aplicáveis a cada permissão concedida.</p>
 
-    <h4>6.5.4. Armazenamento e retenção dos dados de integrações</h4>
-    <p>Os dados obtidos via integrações OAuth são armazenados <strong>apenas o tempo necessário para a finalidade declarada</strong>. Em particular:</p>
+    <h4>6.5.4. Armazenamento, retenção e deleção dos dados de integrações</h4>
+    <p>ConvertaFlow retém dados obtidos das APIs do Google <strong>apenas pelo tempo necessário</strong> para fornecer as funcionalidades para as quais você autorizou o acesso. <em>(In English: We will retain your personal information received from Google APIs for the length of time needed to fulfill the purposes outlined in this Privacy Policy.)</em> Em particular:</p>
     <ul>
-      <li><strong>Tokens de acesso e refresh tokens</strong> ficam criptografados em repouso e são utilizados exclusivamente para chamadas autorizadas às respectivas APIs</li>
-      <li><strong>Dados de campanhas</strong> (Google Ads, Meta Ads) são armazenados em formato agregado para alimentar os dashboards do Usuário e ficam isolados na Organização do Usuário</li>
+      <li><strong>Tokens de acesso e refresh tokens</strong> ficam criptografados em repouso (AES-256-GCM) e são utilizados exclusivamente para chamadas autorizadas às respectivas APIs</li>
+      <li><strong>Dados de campanhas</strong> (Google Ads, Meta Ads) são armazenados em formato agregado para alimentar os dashboards do Usuário e ficam isolados na Organização do Usuário (schema PostgreSQL <code>tenant_{uuid}</code> por tenant)</li>
+      <li><strong>Cache de métricas</strong> é mantido por <strong>até 24 horas</strong> para performance dos dashboards e renovado automaticamente</li>
+      <li><strong>Dados de eventos de conversão</strong> (offline conversions enviados ao Google Ads) ficam armazenados pelo período da assinatura ativa</li>
       <li><strong>Dados sensíveis</strong> nunca são logados em sistemas externos de monitoramento (ex.: Sentry recebe apenas IDs anônimos, nunca conteúdo)</li>
+      <li>Quando o período de retenção expira, os dados são <strong>deletados ou destruídos</strong> permanentemente. <em>(In English: When the data retention period expires, we will delete or destroy your personal information.)</em></li>
     </ul>
+    <p><strong>Você pode solicitar a exclusão dos seus dados a qualquer momento</strong> <em>(In English: You may request for your data to be deleted)</em> por qualquer um dos meios descritos na seção 6.5.5 abaixo. A exclusão dos dados Google é executada em <strong>até 24 horas</strong> após a desconexão da integração ou solicitação ao DPO.</p>
 
     <h4>6.5.5. Como o Usuário pode revogar o acesso</h4>
     <p>O Usuário pode revogar o acesso da ConvertaFlow a qualquer plataforma externa a qualquer momento, por qualquer um dos seguintes meios:</p>
@@ -699,6 +703,17 @@
       <li><strong>Por solicitação ao DPO</strong>: enviando e-mail para <a href="mailto:dpo@convertaflow.com">dpo@convertaflow.com</a> com a solicitação de desvinculação</li>
     </ol>
     <p>Após a revogação, a ConvertaFlow <strong>deixa imediatamente de fazer chamadas</strong> à plataforma externa em nome do Usuário e os dados em cache que dependem da integração são removidos no próximo ciclo de sincronização (em até 24 horas).</p>
+
+    <h4>6.5.6. Verificação em duas etapas (MFA) — exigência da Google Ads API</h4>
+    <p>A partir de <strong>21 de abril de 2026</strong>, o Google passou a exigir que qualquer Usuário que conecte sua conta Google Ads à ConvertaFlow tenha <strong>Verificação em Duas Etapas (2-Step Verification / MFA)</strong> ativada na sua Conta Google. Essa exigência é da Google Ads API e não da ConvertaFlow — não temos controle sobre ela.</p>
+    <p>Se a sua Conta Google ainda não tem MFA ativado:</p>
+    <ol>
+      <li>Acesse <a href="https://myaccount.google.com/security" target="_blank" rel="noopener noreferrer">myaccount.google.com/security</a></li>
+      <li>Em "Como você faz login no Google", ative <strong>"Verificação em duas etapas"</strong></li>
+      <li>Configure o método de autenticação preferido (chave de segurança, app autenticador ou SMS)</li>
+      <li>Volte à ConvertaFlow e tente conectar sua conta Google Ads novamente</li>
+    </ol>
+    <p>Sem MFA ativo, o fluxo de autorização vai falhar com mensagem do Google. Esta exigência se aplica apenas às integrações com Google Ads — outras integrações (Calendar, Meta) seguem suas próprias regras.</p>
 
     <hr>
 
