@@ -260,6 +260,28 @@ async function syncDocs() {
   if (result.fetched < result.total) {
     throw new Error(`Sync incompleto: ${result.fetched}/${result.total} artigos baixados.`);
   }
+
+  // Cleanup de orfaos: apaga .json que nao estao mais no indice.
+  // Roda DEPOIS do sync OK — se API cair, mantem estado anterior funcional.
+  const indexPath = path.join(DOCS_DATA_DIR, "index.json");
+  if (fs.existsSync(indexPath)) {
+    const index = JSON.parse(fs.readFileSync(indexPath, "utf-8"));
+    const validSlugs = new Set(["index"]);
+    for (const cat of index.categories || []) {
+      for (const art of cat.articles || []) validSlugs.add(art.slug);
+    }
+    let removed = 0;
+    for (const file of fs.readdirSync(DOCS_DATA_DIR)) {
+      if (!file.endsWith(".json")) continue;
+      const slug = file.slice(0, -5);
+      if (!validSlugs.has(slug)) {
+        fs.unlinkSync(path.join(DOCS_DATA_DIR, file));
+        removed++;
+      }
+    }
+    if (removed > 0) console.log(`  🧹 ${removed} arquivo(s) orfao(s) removido(s) de data/docs/`);
+  }
+
   console.log(`  ✔ ${result.fetched}/${result.total} artigos sincronizados`);
 }
 
