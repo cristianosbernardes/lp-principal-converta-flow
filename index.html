@@ -274,10 +274,14 @@
 
       /* Surfaces */
       --surface-base: #faf8ff;
-      --surface-low: #f4f3fa;
+      --surface-low: #f5f5f5;
       --surface-container: #efedf4;
       --surface-high: #e9e7ee;
       --surface-card: #ffffff;
+
+      /* Borders (paridade com app — visual-identity-components.md) */
+      --border-primary: #d1d5db;
+      --border-secondary: #e5e7eb;
 
       /* Text */
       --text-primary: #02174a;
@@ -677,7 +681,7 @@
       align-items: center;
       padding-top: 72px;
       overflow: hidden;
-      background: linear-gradient(135deg, #1a4a8a 0%, #1e7fd4 40%, #1a3a6e 100%);
+      background: linear-gradient(180deg, #1e7fd4 0%, #1a3a6e 100%);
     }
 
     .hero::before {
@@ -1047,6 +1051,7 @@
 
     .channel-card {
       background: var(--surface-card);
+      border: 1.5px solid var(--border-primary);
       border-radius: var(--radius-xl);
       padding: 32px;
       box-shadow: var(--shadow-sm);
@@ -1097,6 +1102,7 @@
 
     .feature-card {
       background: var(--surface-card);
+      border: 1.5px solid var(--border-primary);
       border-radius: var(--radius-xl);
       padding: 32px;
       box-shadow: var(--shadow-sm);
@@ -1155,7 +1161,7 @@
        ══════════════════════════════════════════════════════════════════ */
     .lia-section {
       position: relative;
-      background: linear-gradient(180deg, var(--brand-deeper) 0%, #0d1b3e 100%);
+      background: linear-gradient(180deg, #1e7fd4 0%, #1a3a6e 100%);
       overflow: hidden;
     }
 
@@ -1548,6 +1554,7 @@
 
     .pricing-card {
       background: var(--surface-card);
+      border: 1.5px solid var(--border-primary);
       border-radius: var(--radius-xl);
       padding: 32px 28px;
       box-shadow: var(--shadow-sm);
@@ -1730,6 +1737,7 @@
 
     .faq-item {
       background: var(--surface-card);
+      border: 1.5px solid var(--border-primary);
       border-radius: var(--radius-xl);
       box-shadow: var(--shadow-sm);
       overflow: hidden;
@@ -1790,22 +1798,34 @@
        CTA FINAL
        ══════════════════════════════════════════════════════════════════ */
     .cta-final {
-      background: linear-gradient(180deg, #1e7fd4 0%, #1a3a6e 100%);
-      position: relative;
-      overflow: hidden;
+      background: var(--surface-base);
       text-align: center;
     }
 
-    .cta-final::before {
+    .cta-final-card {
+      position: relative;
+      max-width: 880px;
+      margin: 0 auto;
+      padding: clamp(48px, 7vw, 88px) clamp(24px, 4vw, 56px);
+      background: linear-gradient(150deg, #1e7fd4 0%, #1a3a6e 100%);
+      border-radius: 28px;
+      box-shadow: var(--shadow-float);
+      overflow: hidden;
+    }
+
+    .cta-final-card::before {
       content: '';
       position: absolute;
       inset: 0;
       background-image: radial-gradient(circle, rgba(171, 199, 255, 0.08) 1px, transparent 1px);
       background-size: 28px 28px;
       pointer-events: none;
+      z-index: 1;
     }
 
-    .cta-final-inner {
+    .cta-final h2,
+    .cta-final p,
+    .cta-final-actions {
       position: relative;
       z-index: 2;
     }
@@ -3036,15 +3056,17 @@
          CTA FINAL
          ════════════════════════════════════════════════════════════════ -->
     <section class="section cta-final" aria-label="Chamada para ação">
-      <div class="container cta-final-inner">
-        <h2 class="reveal">Pronto para converter mais?</h2>
-        <p class="reveal reveal-delay-1">7 dias grátis para testar tudo. Cancele quando quiser, sem surpresas.</p>
-        <div class="cta-final-actions reveal reveal-delay-2">
-          <a href="#precos" class="btn btn-cta">
-            Começar teste grátis
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-          </a>
-          <a href="#recursos" class="btn btn-outline-light">Explorar recursos</a>
+      <div class="container">
+        <div class="cta-final-card reveal">
+          <h2>Pronto para converter mais?</h2>
+          <p>7 dias grátis para testar tudo. Cancele quando quiser, sem surpresas.</p>
+          <div class="cta-final-actions">
+            <a href="#precos" class="btn btn-cta">
+              Começar teste grátis
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+            <a href="#recursos" class="btn btn-outline-light">Explorar recursos</a>
+          </div>
         </div>
       </div>
     </section>
