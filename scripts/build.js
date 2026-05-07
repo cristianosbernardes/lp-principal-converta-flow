@@ -104,7 +104,9 @@ function getPlanFeatures(plan) {
     case "essencial":
       features.push(`${check}<span>Flow Builder · <strong>${plan.max_flows || 5}</strong> fluxos</span>`);
       features.push(`${check}<span>CRM básico · <strong>${plan.max_pipelines || 1}</strong> pipeline</span>`);
-      features.push(`${check}<span><strong>${plan.max_ai_agents || 1}</strong> agente IA · modo texto</span>`);
+      if (plan.max_ai_agents > 0) {
+        features.push(`${check}<span><strong>${plan.max_ai_agents}</strong> agente IA · modo texto</span>`);
+      }
       features.push(`${check}<span>Email Marketing · <strong>${formatNumber(plan.max_emails_monthly || 1000)}</strong> emails/mês</span>`);
       features.push(`${check}<span><strong>${plan.max_campaigns_month || 5}</strong> campanhas/mês</span>`);
       features.push(`${check}<span>Instagram Auto</span>`);
@@ -184,15 +186,20 @@ const descriptionOverrides = {
 };
 
 function generateSchemaOffers(plans) {
-  const offers = plans.map((plan) => ({
-    "@type": "Offer",
-    name: plan.name,
-    price: plan.pricing.monthly.total,
-    priceCurrency: "BRL",
-    priceValidUntil: "2027-12-31",
-    availability: "https://schema.org/InStock",
-    description: `${plan.max_users} usuário${plan.max_users > 1 ? "s" : ""}, ${plan.max_connections} WhatsApp, contatos ilimitados, ${plan.max_ai_agents} agente${plan.max_ai_agents > 1 ? "s" : ""} IA, ${formatNumber(plan.max_emails_monthly || 0)} emails/mês`,
-  }));
+  const offers = plans.map((plan) => {
+    const aiPart = plan.max_ai_agents > 0
+      ? `, ${plan.max_ai_agents} agente${plan.max_ai_agents > 1 ? "s" : ""} IA`
+      : "";
+    return {
+      "@type": "Offer",
+      name: plan.name,
+      price: plan.pricing.monthly.total,
+      priceCurrency: "BRL",
+      priceValidUntil: "2027-12-31",
+      availability: "https://schema.org/InStock",
+      description: `${plan.max_users} usuário${plan.max_users > 1 ? "s" : ""}, ${plan.max_connections} WhatsApp, contatos ilimitados${aiPart}, ${formatNumber(plan.max_emails_monthly || 0)} emails/mês`,
+    };
+  });
   const lines = JSON.stringify(offers, null, 6);
   return `    "offers": ${lines},`;
 }

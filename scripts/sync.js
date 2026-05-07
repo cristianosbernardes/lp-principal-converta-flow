@@ -107,6 +107,7 @@ function syncPlansLocal() {
   const PLANS_V3_FILE = path.join(APP_ROOT, "backend-python/alembic/versions/021_plans_v3_full_features.py");
   const PLANS_V5_FILE = path.join(APP_ROOT, "backend-python/alembic/versions/030_plans_v5_pricing_and_new_features.py");
   const PLANS_V5_FIX_FILE = path.join(APP_ROOT, "backend-python/alembic/versions/031_fix_annual_prices_20_percent_discount.py");
+  const PLANS_094_FILE = path.join(APP_ROOT, "backend-python/alembic/versions/094_essencial_remove_ai_agent.py");
 
   const v2Content = readFile(PLANS_V2_FILE);
   if (!v2Content) {
@@ -121,6 +122,8 @@ function syncPlansLocal() {
   if (v5Content) plans = parsePlansV5(v5Content, plans);
   const v5FixContent = readFile(PLANS_V5_FIX_FILE);
   if (v5FixContent) plans = parsePlansV5(v5FixContent, plans);
+  const v094Content = readFile(PLANS_094_FILE);
+  if (v094Content) plans = parsePlansV5(v094Content, plans);
 
   return computeDerivedPricing(plans);
 }
