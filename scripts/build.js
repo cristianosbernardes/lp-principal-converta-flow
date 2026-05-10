@@ -612,9 +612,9 @@ function docsLayout({ title, description, canonical, bodyContent, sidebar, toc, 
   <link rel="icon" type="image/svg+xml" href="/icon.svg">
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
 
-  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/geist@1.3.0/dist/font/sans.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/geist@1.3.0/dist/font/mono.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700;0,800;1,700&display=swap">
 
   <link rel="stylesheet" href="/docs-styles.css">
 </head>
@@ -1165,8 +1165,8 @@ const DOCS_CSS = `/* ConvertaFlow — Docs styles (gerado por build.js) */
   --radius-xl: 16px;
   --transition-fast: 150ms ease;
   --transition-base: 200ms ease;
-  --font-sans: 'Geist Sans', 'Geist', system-ui, -apple-system, sans-serif;
-  --font-mono: 'Geist Mono', 'SF Mono', monospace;
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'SF Mono', 'Fira Code', ui-monospace, monospace;
 }
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; font-size: 16px; background: #0a0f1e; }
